@@ -1,11 +1,14 @@
 import { band, withinBand } from '../levels'
-import { choice, labels, NoContentError } from '../build'
+import { NoContentError } from '../build'
 import { randInt, sample, shuffle } from '../random'
 import type { ExerciseDefinition, Option, Task } from '../types'
 
 export interface MemoryPayload { thing: string; icon?: string } // icon: Lucide-Name für die Karte
 
-export interface MemoryData { shown: string[] }
+export interface MemoryData {
+  shown: string[]
+  icons: Record<string, string | undefined> // Ding → Lucide-Icon
+}
 
 /**
  * 1–3: 2 Dinge, dann „War das dabei?“ Ja/Nein.
@@ -29,7 +32,9 @@ export const memory: ExerciseDefinition<MemoryData> = {
     const total = b === 'low' ? shownCount + 1 : b === 'mid' ? 6 : 9
     if (pool.length < total) throw new NoContentError('memory', level)
 
-    const chosen = sample(random, pool, total).map((i) => i.payload.thing)
+    const picked = sample(random, pool, total)
+    const chosen = picked.map((i) => i.payload.thing)
+    const icons = Object.fromEntries(picked.map((i) => [i.payload.thing, i.payload.icon]))
     const shown = chosen.slice(0, shownCount)
     const memorize = { prompt: `Merken Sie sich diese ${shownCount} Dinge`, items: shown }
 
@@ -42,19 +47,18 @@ export const memory: ExerciseDefinition<MemoryData> = {
       return {
         exercise: 'memory', level, select: 'single', memorize,
         prompt: `War „${asked}“ dabei?`,
-        data: { shown },
+        data: { shown, icons },
         options, correctIds: [wasShown ? 'a' : 'b'],
         hint: 'Denken Sie an die Bilder vom Anfang zurück.',
         explanation: `Gezeigt wurden: ${shown.join(', ')}.`,
       }
     }
 
-    const { options } = choice(random, { label: chosen[0]! }, labels(chosen.slice(1)))
-    const ordered = shuffle(random, options).map((o, i) => ({ ...o, id: 'abcdefghi'[i]! }))
+    const ordered = shuffle(random, chosen).map((thing, i) => ({ id: 'abcdefghi'[i]!, label: thing, icon: icons[thing] }))
     return {
       exercise: 'memory', level, select: 'multi', memorize,
       prompt: 'Welche Dinge haben Sie gesehen? Tippen Sie alle an.',
-      data: { shown },
+      data: { shown, icons },
       options: ordered,
       correctIds: ordered.filter((o) => shown.includes(o.label)).map((o) => o.id),
       hint: `Es waren ${shownCount} Dinge. Denken Sie an die Bilder vom Anfang zurück.`,

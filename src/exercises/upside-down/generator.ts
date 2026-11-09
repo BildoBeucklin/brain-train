@@ -30,7 +30,7 @@ export const upsideDown: ExerciseDefinition<UpsideDownData> = {
       prompt: sentence ? 'Welcher Satz steht hier auf dem Kopf?' : 'Welches Wort steht hier auf dem Kopf?',
       data: { text },
       options, correctIds,
-      hint: 'Schauen Sie noch einmal genau hin. Lesen Sie von rechts nach links.',
+      hint: 'Lesen Sie von rechts nach links.',
       explanation: `Hier steht „${text}“.`,
     }
   },

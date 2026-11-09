@@ -56,6 +56,14 @@
   --stroop-orange: #a84e00;
   --stroop-purple: #7a3ba8;
   --stroop-brown: #7a4a20;
+
+  /* Profilsymbole (Icons, >= 3:1 auf Fläche) */
+  --profile-flower: #a3366b;
+  --profile-sun: #8a5a00;
+  --profile-bird: #1b4fb8;
+  --profile-cat: #6b4a2b;
+  --profile-anchor: #1e5e55;
+  --profile-coffee: #7a3ba8;
 }
 
 :root[data-theme='dark'] {
@@ -81,4 +89,11 @@
   --stroop-orange: #ffaa5c;
   --stroop-purple: #cda6f0;
   --stroop-brown: #d9aa80;
+
+  --profile-flower: #f2a2c8;
+  --profile-sun: #f3c54b;
+  --profile-bird: #8db1ff;
+  --profile-cat: #d9aa80;
+  --profile-anchor: #7cc8bb;
+  --profile-coffee: #cda6f0;
 }

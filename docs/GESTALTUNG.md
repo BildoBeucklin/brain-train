@@ -61,6 +61,7 @@ Quelle: `src/styles/tokens.css`. Der Test `tests/unit/tokens.test.ts` prüft die
 
 ## Komponenten
 - **AnswerButton**: Standard / Hover / Fokus / Gedrückt / Richtig (grüner Rahmen, Häkchen, „Richtig!“) / Ausgegraut (grau, leicht durchgestrichen, nicht klickbar) / Lösung (hervorgehoben, „Das ist die richtige Antwort“).
+- Bei Mehrfachauswahl (Merken) steht auf Lösungskarten kurz „Das war dabei“, Icon neben dem Text – sonst passen 9 Karten nicht auf 1280×800.
 - **AnswerGrid**: 2 = nebeneinander, 3 = Reihe, 4 = 2×2.
 - **ProgressDots**: 5 Punkte je Block, ausgefüllt = erledigt (ohne richtig/falsch).
 - **HintBanner**: ruhiger Hinweis mit Glühbirne, z. B. „Schauen Sie noch einmal genau hin. Lesen Sie von rechts nach links.“

@@ -7,6 +7,8 @@ export interface Option {
   label: string
   /** Farbübung: CSS-Variable des Farbfelds, z. B. '--stroop-red' */
   swatch?: string
+  /** Merken: Name des Lucide-Icons der Karte */
+  icon?: string
 }
 
 export interface Task<D = unknown> {

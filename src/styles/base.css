@@ -26,3 +26,14 @@ body { overflow: hidden; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Großes Aufgabenwort in der Mitte */
+.stage-word {
+  margin: 0;
+  font-size: var(--text-stage);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.empty { display: none; }

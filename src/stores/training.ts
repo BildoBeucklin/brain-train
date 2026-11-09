@@ -94,7 +94,7 @@ export const useTrainingStore = defineStore('training', () => {
   function showTask(exercise: ExerciseId, level: ReturnType<typeof clampLevel>): void {
     const t = registry[exercise].generate({
       level, random: Math.random, draw: content.draw, pool: content.pool,
-      assisted: settings.values.mode === 'assisted',
+      assisted: assisted.value,
     })
     task.value = t
     phase.value = t.memorize ? 'memorize' : 'answer'
@@ -125,6 +125,58 @@ export const useTrainingStore = defineStore('training', () => {
     evaluate([optionId])
   }
 
+  const assisted = computed(() => settings.values.mode === 'assisted')
+
+  /** Begleitperson: „Hinweis geben“ – graut eine falsche Antwort aus und zeigt den Hinweis. Zählt als Hinweis. */
+  function hint(): void {
+    const t = task.value
+    if (!t || phase.value !== 'answer' || t.open) return
+    const candidates = t.options.filter((o) =>
+      !t.correctIds.includes(o.id) && !eliminated.value.includes(o.id) && !selected.value.includes(o.id))
+    const remaining = t.options.length - eliminated.value.length
+    // Bei Einzelauswahl mindestens zwei Antworten übrig lassen
+    if (candidates.length && (t.select === 'multi' || remaining > 2)) {
+      eliminated.value = [...eliminated.value, candidates[Math.floor(Math.random() * candidates.length)]!.id]
+    }
+    usedHint.value = true
+    hintVisible.value = true
+  }
+
+  /** Begleitperson wertet eine mündliche Antwort: „Mündlich richtig“ bzw. „Nicht gewusst“. */
+  function judge(correct: boolean): void {
+    if (!task.value || stage.value !== 'task' || done.value) return
+    if (phase.value === 'memorize') phase.value = 'answer'
+    if (!correct) tries.value = 2
+    else tries.value = Math.max(tries.value, 0) + 1
+    finishTask(correct)
+  }
+
+  /** Begleitperson: nächste Aufgabe ohne Wertung. */
+  function skip(): void {
+    if (stage.value === 'task') nextStep()
+  }
+
+  /** Begleitperson: Niveau der aktuellen Übung ändern; die Aufgabe wird auf dem neuen Niveau neu gestellt. */
+  async function changeLevel(delta: number): Promise<void> {
+    const t = task.value
+    if (!t || stage.value !== 'task') return
+    // vom angezeigten Niveau aus (beim Aufwärmen liegt es eins unter dem gespeicherten)
+    const level = clampLevel(t.level + delta)
+    if (level === t.level) return
+    if (sessionId.value != null) await profile.setLevel(t.exercise, level)
+    try { showTask(t.exercise, level) } catch (e) { if (!(e instanceof NoContentError)) throw e }
+  }
+
+  async function setLocked(locked: boolean): Promise<void> {
+    const t = task.value
+    if (!t || sessionId.value == null) return
+    await profile.setLevel(t.exercise, profile.levelOf(t.exercise), locked)
+  }
+
+  async function setAssisted(on: boolean): Promise<void> {
+    await settings.set('mode', on ? 'assisted' : 'alone')
+  }
+
   /** Mehrfachauswahl: „Fertig“. */
   function submit(): void {
     if (task.value?.select === 'multi' && phase.value === 'answer' && selected.value.length) evaluate(selected.value)
@@ -150,14 +202,13 @@ export const useTrainingStore = defineStore('training', () => {
     phase.value = correct ? 'correct' : 'solution'
     hintVisible.value = false
     const result = { correct, tries: (tries.value >= 2 ? 2 : 1) as 1 | 2, hint: usedHint.value }
-    const assisted = settings.values.mode === 'assisted'
     const now = Date.now()
     if (sessionId.value == null || profile.currentId == null) return // Vorschau: nichts speichern
     void profile.applyResult(t.exercise, result, now)
     {
       void db.attempts.add({
         sessionId: sessionId.value, profileId: profile.currentId, exercise: t.exercise, level: t.level,
-        ...result, assisted, ms: now - taskStartedAt, at: now,
+        ...result, assisted: assisted.value, ms: now - taskStartedAt, at: now,
       })
     }
   }
@@ -207,7 +258,7 @@ export const useTrainingStore = defineStore('training', () => {
 
   return {
     stage, task, phase, tries, eliminated, selected, hintVisible, usedHint, blockIndex, blockSize, warmup,
-    sessionId, minutesTrained, isMulti, done,
-    start, begin, preview, memorized, answer, submit, proceed, pause, resume, finish, reset, elapsedMs,
+    sessionId, minutesTrained, isMulti, done, assisted,
+    start, begin, preview, memorized, hint, judge, skip, changeLevel, setLocked, setAssisted, answer, submit, proceed, pause, resume, finish, reset, elapsedMs,
   }
 })

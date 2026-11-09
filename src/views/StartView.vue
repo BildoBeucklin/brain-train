@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { HandHelping, Play } from 'lucide-vue-next'
@@ -21,6 +21,11 @@ const selectedId = ref<number | null>(profile.profiles.length === 1 ? profile.pr
 const assisted = ref(settings.values.mode === 'assisted')
 const editorOpen = ref(false)
 const starting = ref(false)
+
+// Neue Profile (noch keine Einheit) starten standardmäßig mit Begleitung
+watch(selectedId, async (id) => {
+  if (id != null && !(await profile.hasSessions(id))) assisted.value = true
+}, { immediate: true })
 
 const tiles = computed(() => profile.profiles.slice(0, MAX_TILES))
 const canAdd = computed(() => profile.profiles.length < MAX_TILES)

@@ -73,6 +73,25 @@ export const useProfileStore = defineStore('profile', () => {
     return updated
   }
 
+  /** Begleitperson: Niveau direkt setzen bzw. festhalten (die adaptive Regel pausiert dann). */
+  async function setLevel(exercise: ExerciseId, level: Level, locked?: boolean): Promise<Skill> {
+    const s = skills.value.get(exercise)
+    if (!s) throw new Error('Kein Profil gewählt')
+    const updated: Skill = { ...s, level, streak: 0, ...(locked !== undefined && { locked }) }
+    skills.value.set(exercise, updated)
+    await db.skills.put(updated)
+    return updated
+  }
+
+  function isLocked(exercise: ExerciseId): boolean {
+    return !!skills.value.get(exercise)?.locked
+  }
+
+  /** Hat das Profil schon einmal trainiert? Neue Profile starten betreut. */
+  async function hasSessions(id: number): Promise<boolean> {
+    return (await db.sessions.where('profileId').equals(id).count()) > 0
+  }
+
   /** Meistgeübte Übung des Profils, fürs Aufwärmen. */
   async function favorite(): Promise<ExerciseId | undefined> {
     if (currentId.value == null) return undefined
@@ -83,5 +102,5 @@ export const useProfileStore = defineStore('profile', () => {
     return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
   }
 
-  return { profiles, current, currentId, skills, load, create, remove, select, levelOf, applyResult, favorite }
+  return { profiles, current, currentId, skills, load, create, remove, select, levelOf, applyResult, favorite, setLevel, isLocked, hasSessions }
 })

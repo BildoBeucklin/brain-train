@@ -11,6 +11,8 @@ import { useTrainingStore } from '@/stores/training'
 import AnswerButton, { type AnswerState } from './AnswerButton.vue'
 import AnswerGrid from './AnswerGrid.vue'
 import HintBanner from './HintBanner.vue'
+import HelpToggle from '@/components/companion/HelpToggle.vue'
+import { MessageCircle } from 'lucide-vue-next'
 import ProgressDots from './ProgressDots.vue'
 
 const training = useTrainingStore()
@@ -44,16 +46,24 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
         <span>{{ def.label }}</span>
         <ProgressDots :total="training.blockSize" :done="training.blockIndex + (training.done ? 1 : 0)" />
       </div>
-      <BigButton label="Pause" :icon="Pause" data-testid="pause" @press="training.pause()" />
+      <div class="top-right">
+        <HelpToggle :active="training.assisted" @toggle="training.setAssisted(!training.assisted)" />
+        <BigButton label="Pause" :icon="Pause" data-testid="pause" @press="training.pause()" />
+      </div>
     </header>
 
-    <h1 class="prompt">{{ promptText }}</h1>
+    <h1 class="prompt">{{ task.open && !memorizing ? task.open.prompt : promptText }}</h1>
 
     <div class="stage">
       <component :is="prompt" :task="task" :phase="training.phase" />
     </div>
 
-    <AnswerGrid v-if="!memorizing" :count="task.options.length" class="answers">
+    <div v-if="task.open && !memorizing" class="open-note" data-testid="open-task">
+      <MessageCircle :size="32" aria-hidden="true" />
+      <span>Bitte antworten Sie mündlich. Ihre Begleitung hört zu.</span>
+    </div>
+
+    <AnswerGrid v-else-if="!memorizing" :count="task.options.length" class="answers">
       <AnswerButton
         v-for="o in task.options"
         :key="o.id"
@@ -115,6 +125,17 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
   max-width: 1600px;
   margin-inline: auto;
 }
+.top-right { display: flex; align-items: center; gap: var(--space-2); }
+.open-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: var(--text-answer);
+}
+.open-note :deep(svg) { color: var(--color-accent-text); flex: none; }
 .top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .where {
   display: flex;

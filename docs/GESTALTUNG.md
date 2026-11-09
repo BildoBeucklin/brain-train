@@ -67,6 +67,11 @@ Quelle: `src/styles/tokens.css`. Der Test `tests/unit/tokens.test.ts` prüft die
 - **HintBanner**: ruhiger Hinweis mit Glühbirne, z. B. „Schauen Sie noch einmal genau hin. Lesen Sie von rechts nach links.“
 - **ProfileTile**: großes Symbol (Blume, Sonne, Vogel, Katze, Anker, Kaffeetasse) in eigener Farbe + Rufname.
 - **CompanionBar** (nur betreut): 72 px hoch, unten, dezent abgesetzt; „Tipp“, „Hinweis geben“, „Lösung ansehen“, „Mündlich richtig“, „Nicht gewusst“, „Überspringen“, Niveau „− 4 +“ mit „Festhalten“, „Pause“, „Beenden“. Schrift 20 px (für die Begleitperson).
+  - Umsetzung: Icon über der Beschriftung, Zwei-Wort-Labels zweizeilig – so passt die Leiste mit Puffer auf 1280 px.
+  - „Tipp“ öffnet ein Popover (per Klick/Touch) statt eines Tooltips, weil Tooltips auf Touchscreens nicht aufgehen.
+  - „Lösung ansehen“ zeigt „Lösung: …“ als kleines dunkles Schild direkt über der Leiste, solange gedrückt.
+  - „− / +“ rechnet vom angezeigten Niveau aus (beim Aufwärmen eins unter dem gespeicherten) und stellt die Aufgabe sofort neu.
+  - Neue Profile (noch keine Einheit) starten mit eingeschaltetem „Mit Begleitung“.
 - Großer **Pause-Button** oben rechts im Training (Icon + „Pause“).
 
 ## Bildschirme

@@ -6,6 +6,8 @@ import { Check, ChevronRight, Coffee, House, Pause, Play } from 'lucide-vue-next
 import BigButton from '@/components/BigButton.vue'
 import MessageScreen from '@/components/training/MessageScreen.vue'
 import TaskScreen from '@/components/training/TaskScreen.vue'
+import CompanionBar from '@/components/companion/CompanionBar.vue'
+import { useKeyboard } from '@/composables/useKeyboard'
 import { useIdle } from '@/composables/useIdle'
 import { useWakeLock } from '@/composables/useWakeLock'
 import { useProfileStore } from '@/stores/profile'
@@ -18,6 +20,13 @@ const settings = useSettingsStore()
 const router = useRouter()
 
 useWakeLock()
+
+// Optionale Tasten für die Begleitperson
+useKeyboard(
+  { h: () => training.hint(), s: () => training.skip(), p: () => training.pause() },
+  () => training.assisted && training.stage === 'task',
+)
+const showBar = computed(() => training.assisted && training.stage === 'task')
 const { idle, reset: resetIdle } = useIdle()
 
 // Nachfrage nur, wenn gerade trainiert wird – nicht in Pause oder am Ende
@@ -34,7 +43,8 @@ async function done() {
 </script>
 
 <template>
-  <main class="training">
+  <main class="training" :class="{ 'with-bar': showBar }">
+    <div class="content">
     <MessageScreen
       v-if="training.stage === 'greeting'"
       :title="`Schön, dass Sie da sind, ${profile.current?.name}.`"
@@ -63,6 +73,9 @@ async function done() {
       <BigButton label="Fertig" :icon="Check" variant="primary" size="large" data-testid="done" @press="done" />
     </MessageScreen>
 
+    </div>
+    <CompanionBar v-if="showBar" />
+
     <DialogRoot :open="idleOpen">
       <DialogPortal>
         <DialogOverlay class="idle-overlay" />
@@ -80,7 +93,9 @@ async function done() {
 </template>
 
 <style scoped>
-.training { height: 100%; }
+.training { height: 100%; display: grid; grid-template-rows: minmax(0, 1fr); }
+.training.with-bar { grid-template-rows: minmax(0, 1fr) var(--companion-height); }
+.content { min-height: 0; }
 </style>
 
 <style>

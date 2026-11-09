@@ -1,19 +1,29 @@
-# [Projektname Hier Eintragen]
+# Gedächtnisstunde
 
 **Beschreibung:**
-[Hier kurz beschreiben, worum es geht. Z.B.: Eine Landingpage für Zahnärzte mit Terminbuchung.]
+Offline-App für Gedächtnistraining in Gruppen (Senioreneinrichtungen). Eine Betreuungskraft bedient die App am PC, die Gruppe sieht die Aufgabe groß auf Beamer oder TV und antwortet mündlich. 9 Übungen plus gemischter Modus, je 3 Schwierigkeitsstufen. Kein Internet, keine Konten, keine personenbezogenen Daten; alle Daten bleiben lokal. Auslieferung als Windows-Installer (.exe) und als installierbare PWA. Fachliche Vorlage ist der bestehende HTML-Prototyp.
+
+Ausführliches Konzept: [docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md)
 
 **Tech Stack:**
-- [z.B. Vue.js, Go, Docker]
+- Vue 3 (Composition API, `<script setup>`), TypeScript, Vite
+- Pinia, vue-router, Dexie (IndexedDB), zod
+- Reka UI (ehemals radix-vue), lucide-vue-next, CSS-Variablen, Atkinson Hyperlegible (@fontsource)
+- vite-plugin-pwa (Workbox)
+- Tauri 2 mit NSIS-Installer (Alternative: Electron + electron-builder)
+- Vitest, @vue/test-utils, Playwright
 
 **Known Deadlines:**
-- [z.B.Go-Live - 1. Januar 2023]
+- Konzept: 30. Okt. 2026
+- Pilot in einer Einrichtung: noch offen
 
 **Milestones:**
-- [z.b Phase 1: Infrastruktur]
-- [z.b Phase 2: MVP Release]
+- Phase 1: Grundgerüst
+- Phase 2: Übungs-Engine
+- Phase 3: Moderationsansicht (danach Stand des HTML-Prototyps)
+- Phase 4: Inhalte und Daten
+- Phase 5: Zwei Bildschirme und PWA
+- Phase 6: Paket und Pilot
 
 **Standard Label:**
-- [z.b. Infrastruktur]
-
----
+- Frontend, Engine, Datenbank, Desktop, Tests, UX, Organisation

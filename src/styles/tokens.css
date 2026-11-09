@@ -1,66 +1,84 @@
+/* Design-Tokens – siehe docs/GESTALTUNG.md. Kontraste prüft tests/unit/tokens.test.ts. */
 :root {
   --font-sans: 'Atkinson Hyperlegible', system-ui, sans-serif;
 
-  /* --font-scale kommt später aus settings.fontScale (4 Stufen) */
+  /* Schrift; --font-scale später aus settings.fontScale (4 Stufen) */
   --font-scale: 1;
-  --text-ui: calc(1.125rem * var(--font-scale));
-  --text-task: calc(2.5rem * var(--font-scale)); /* Aufgabentext >= 40 px auf 1080p */
-  --text-answer: calc(2rem * var(--font-scale)); /* Antworten >= 32 px */
-  --text-stage: calc(3.5rem * var(--font-scale)); /* großes Aufgabenwort */
+  --text-min: calc(1.25rem * var(--font-scale)); /* 20 px, nie kleiner (Begleitleiste) */
+  --text-help: calc(1.5rem * var(--font-scale)); /* 24 px Hilfetexte */
+  --text-answer: calc(2rem * var(--font-scale)); /* 32 px Antworten */
+  --text-task: calc(2.5rem * var(--font-scale)); /* 40 px Aufgabentext */
+  --text-stage: calc(4.5rem * var(--font-scale)); /* großes Aufgabenwort, ≥ 56 px fett */
 
+  /* Abstände in 8er-Schritten */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-7: 56px;
+  --space-8: 64px;
+
+  --radius: 16px;
   --answer-min-height: 96px;
+  --answer-min-width: 280px;
   --answer-gap: 24px;
+  --companion-height: 72px;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
-  --space-5: 2.5rem;
-  --space-6: 4rem;
-  --radius: 14px;
-  --focus-ring: 0 0 0 4px var(--color-focus);
+  --focus-width: 4px;
+  --focus-ring-width: 2px;
+  --color-focus: #f3c54b;
+  --focus-shadow: 0 0 0 var(--focus-width) var(--color-focus),
+    0 0 0 calc(var(--focus-width) + var(--focus-ring-width)) var(--color-focus-ring);
 
-  /* Hell (Standard): Text auf Fläche >= 7:1 */
+  /* Hell */
   --color-bg: #ecf1ef;
   --color-surface: #ffffff;
-  --color-text: #10201d;
-  --color-text-muted: #2f4a45;
-  --color-primary: #1e5e55;
-  --color-on-primary: #ffffff;
-  --color-border: #9fb5b0;
-  --color-focus: #e0a100;
-  /* Rückmeldung: richtig = grüner Rahmen, falsch = grau (nie Rot) */
-  --color-correct: #1f6b3a;
-  --color-muted-answer: #d5dcda;
-  --color-on-muted-answer: #3d4a47;
+  --color-text: #18231f;
+  --color-text-muted: #404d49;
+  --color-line: #ccd8d3;
+  --color-control-border: #6f7f79;
+  --color-accent: #1e5e55;
+  --color-on-accent: #ffffff;
+  --color-accent-text: #1a5249;
+  --color-accent-soft: #d6e8e3;
+  --color-success-border: #2a7a33;
+  --color-success-bg: #e5f4e4;
+  --color-neutral-bg: #e4e8e6;
+  --color-neutral-text: #404d49;
+  --color-focus-ring: #18231f;
+
+  /* Farbübung */
+  --stroop-red: #c42525;
+  --stroop-blue: #1b4fb8;
+  --stroop-green: #2a7a33;
+  --stroop-orange: #a84e00;
+  --stroop-purple: #7a3ba8;
+  --stroop-brown: #7a4a20;
 }
 
 :root[data-theme='dark'] {
-  --color-bg: #0e1715;
-  --color-surface: #17231f;
-  --color-text: #f1f6f4;
-  --color-text-muted: #c4d4d0;
-  --color-primary: #7cc8bb;
-  --color-on-primary: #0b1513;
-  --color-border: #3c524d;
-  --color-focus: #ffcc4d;
-  --color-correct: #6fd394;
-  --color-muted-answer: #2a3532;
-  --color-on-muted-answer: #a9b6b3;
-}
+  --color-bg: #121a17;
+  --color-surface: #1b2622;
+  --color-text: #eef3f1;
+  --color-text-muted: #bac7c2;
+  --color-line: #33423d;
+  --color-control-border: #7e8f89;
+  --color-accent: #7cc8bb;
+  --color-on-accent: #0b1513;
+  --color-accent-text: #8fd3c7;
+  --color-accent-soft: #1f3b35;
+  --color-success-border: #6fd394;
+  --color-success-bg: #17301c;
+  --color-neutral-bg: #2a3431;
+  --color-neutral-text: #bac7c2;
+  --color-focus-ring: #000000;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-  --color-bg: #0e1715;
-  --color-surface: #17231f;
-  --color-text: #f1f6f4;
-  --color-text-muted: #c4d4d0;
-  --color-primary: #7cc8bb;
-  --color-on-primary: #0b1513;
-  --color-border: #3c524d;
-  --color-focus: #ffcc4d;
-  --color-correct: #6fd394;
-  --color-muted-answer: #2a3532;
-  --color-on-muted-answer: #a9b6b3;
-  }
+  --stroop-red: #ff8a80;
+  --stroop-blue: #8db1ff;
+  --stroop-green: #73d48f;
+  --stroop-orange: #ffaa5c;
+  --stroop-purple: #cda6f0;
+  --stroop-brown: #d9aa80;
 }

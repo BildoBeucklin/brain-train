@@ -113,7 +113,13 @@ Phasen einer Aufgabe: `memorize` → `answer` → `feedback` | `solution`. Erste
 
 ## Übungs-Engine und adaptive Schwierigkeit
 
-Jede Übung ist ein reiner Generator: aus Niveau 1–10 eine Aufgabe mit 2–4 Antworten, genau einer richtigen, einem Hinweis und einer Erklärung. Das Niveau steuert Zahl der Antworten, Wortlänge und Ähnlichkeit der Ablenker. `Task` enthält `prompt`, `data`, `options`, `correctId`, `hint`, `explanation?`, `memorize?`, `open?`.
+Jede Übung ist ein reiner Generator: aus Niveau 1–10 eine Aufgabe mit 2–4 Antworten, genau einer richtigen, einem Hinweis und einer Erklärung. Das Niveau steuert Zahl der Antworten, Wortlänge und Ähnlichkeit der Ablenker. `Task` enthält `prompt`, `data`, `options`, `select` (`single` | `multi`), `correctIds`, `hint`, `explanation?`, `memorize?`, `open?`.
+
+- `select: 'multi'` mit `correctIds` (statt eines einzelnen `correctId`) ist nötig für „Merken“: mehrere Dinge antippen, dann „Fertig“. `isCorrect(task, auswahl)` prüft beide Fälle.
+- Generatoren bekommen `draw()` (nächster Inhalt aus der Shuffle-Bag) und `pool()` (alle passenden Inhalte, z. B. für Merken-Ablenker) sowie `assisted` für offene Varianten.
+- Die Engine kennt kein Vue: `icon` ist der Name eines Lucide-Icons, die Prompt-Komponenten werden in Meilenstein 3 in einer eigenen Zuordnung ergänzt.
+- Ablenker sind in den Inhalten nach Ähnlichkeit sortiert; unten in einer Stufe werden die unähnlicheren, oben die ähnlichsten gewählt (`pickDistractors`).
+- Farbübung: Die Schriftfarbe ist nie mit einer angebotenen Farbe verwechselbar (Simulation in `src/design/color.ts`, siehe GESTALTUNG.md).
 
 | Übung | Antwort | Niveau 1–3 | Niveau 4–7 | Niveau 8–10 |
 |---|---|---|---|---|
@@ -169,6 +175,9 @@ export function nextLevel(skill: Skill, r: Result): Pick<Skill, 'level' | 'strea
 - Optionale Tasten: H Hinweis, S Überspringen, P Pause.
 
 ## Gestaltung für ältere Menschen
+
+Verbindliche Details, Tokens und Bildschirme: [GESTALTUNG.md](GESTALTUNG.md).
+
 - Antwortflächen ≥ 96 px hoch, 24 px Abstand, ganze Fläche klickbar
 - Klicks 400 ms entprellt
 - Aufgabentext ≥ 40 px, Antworten ≥ 32 px auf 1080p; fontScale 4 Stufen

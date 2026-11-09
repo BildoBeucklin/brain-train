@@ -32,22 +32,22 @@ const links = [
   gap: var(--space-3);
   padding: var(--space-5);
   text-align: center;
-  color: var(--color-primary);
+  color: var(--color-accent-text);
 }
 h1 { font-size: var(--text-stage); margin: 0; color: var(--color-text); }
 p { font-size: var(--text-task); margin: 0; color: var(--color-text-muted); }
 nav { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
 a {
   padding: var(--space-2) var(--space-4);
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--color-control-border);
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-text);
   text-decoration: none;
 }
 a.active {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-color: var(--color-primary);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
 }
 </style>

@@ -13,7 +13,10 @@ body {
 
 button { font: inherit; }
 
-:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 6px; }
+:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
+
+/* Keine Scrollbereiche im Training: Ansichten füllen genau den Bildschirm. */
+body { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

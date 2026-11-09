@@ -3,5 +3,5 @@ import PlaceholderView from './PlaceholderView.vue'
 </script>
 
 <template>
-  <PlaceholderView title="Einstellungen" description="Schriftgröße, Farben und Datensicherung." />
+  <PlaceholderView title="Gedächtnisstunde" description="Hier wählen Sie gleich Ihr Profil." />
 </template>

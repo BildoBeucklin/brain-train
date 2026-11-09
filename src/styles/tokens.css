@@ -4,9 +4,12 @@
   /* --font-scale kommt später aus settings.fontScale (4 Stufen) */
   --font-scale: 1;
   --text-ui: calc(1.125rem * var(--font-scale));
-  --text-prompt: calc(2.25rem * var(--font-scale));
-  --text-stage: calc(3rem * var(--font-scale)); /* >= 48 px auf 1080p */
-  --text-stage-xl: calc(5rem * var(--font-scale));
+  --text-task: calc(2.5rem * var(--font-scale)); /* Aufgabentext >= 40 px auf 1080p */
+  --text-answer: calc(2rem * var(--font-scale)); /* Antworten >= 32 px */
+  --text-stage: calc(3.5rem * var(--font-scale)); /* großes Aufgabenwort */
+
+  --answer-min-height: 96px;
+  --answer-gap: 24px;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -26,6 +29,10 @@
   --color-on-primary: #ffffff;
   --color-border: #9fb5b0;
   --color-focus: #e0a100;
+  /* Rückmeldung: richtig = grüner Rahmen, falsch = grau (nie Rot) */
+  --color-correct: #1f6b3a;
+  --color-muted-answer: #d5dcda;
+  --color-on-muted-answer: #3d4a47;
 }
 
 :root[data-theme='dark'] {
@@ -37,6 +44,9 @@
   --color-on-primary: #0b1513;
   --color-border: #3c524d;
   --color-focus: #ffcc4d;
+  --color-correct: #6fd394;
+  --color-muted-answer: #2a3532;
+  --color-on-muted-answer: #a9b6b3;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -49,5 +59,8 @@
   --color-on-primary: #0b1513;
   --color-border: #3c524d;
   --color-focus: #ffcc4d;
+  --color-correct: #6fd394;
+  --color-muted-answer: #2a3532;
+  --color-on-muted-answer: #a9b6b3;
   }
 }

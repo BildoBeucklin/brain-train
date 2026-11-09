@@ -3,5 +3,5 @@ import PlaceholderView from './PlaceholderView.vue'
 </script>
 
 <template>
-  <PlaceholderView title="Inhalte" description="Eigene Inhalte verwalten." />
+  <PlaceholderView title="Verlauf" description="Geübte Minuten und Niveau je Übung." />
 </template>

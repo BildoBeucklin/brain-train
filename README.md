@@ -1,7 +1,7 @@
 # Gedächtnisstunde
 
 **Beschreibung:**
-Offline-App für Gedächtnistraining in Gruppen (Senioreneinrichtungen). Eine Betreuungskraft bedient die App am PC, die Gruppe sieht die Aufgabe groß auf Beamer oder TV und antwortet mündlich. 9 Übungen plus gemischter Modus, je 3 Schwierigkeitsstufen. Kein Internet, keine Konten, keine personenbezogenen Daten; alle Daten bleiben lokal. Auslieferung als Windows-Installer (.exe) und als installierbare PWA. Fachliche Vorlage ist der bestehende HTML-Prototyp.
+Trainingsprogramm für Gedächtnis und Konzentration, das Seniorinnen und Senioren selbst am PC bedienen – nur Antippen, 2 bis 4 große Antwortflächen, keine Tastatur. 9 Übungen mit adaptiver Schwierigkeit in 10 Niveaus (Ziel ca. 80 % Erfolg), fehlerfreundlich ohne Rot, Fehlerton oder Zeitdruck. Betreuter Modus mit Begleitleiste für eine Begleitperson. Pseudonyme Profile, Verlauf und Verwaltung hinter PIN. Kein Internet, keine Konten, alle Daten lokal. Auslieferung als Windows-Installer (.exe) und PWA. Keine Diagnose, kein Medizinprodukt.
 
 Ausführliches Konzept: [docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md)
 
@@ -19,14 +19,14 @@ Ausführliches Konzept: [docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md)
 
 **Milestones:**
 - Phase 1: Grundgerüst
-- Phase 2: Übungs-Engine
-- Phase 3: Moderationsansicht (danach Stand des HTML-Prototyps)
-- Phase 4: Inhalte und Daten
-- Phase 5: Zwei Bildschirme und PWA
+- Phase 2: Engine und Adaptivität
+- Phase 3: Training allein
+- Phase 4: Betreuter Modus
+- Phase 5: Verwaltung und Verlauf
 - Phase 6: Paket und Pilot
 
 **Standard Label:**
-- Frontend, Engine, Datenbank, Desktop, Tests, UX, Organisation
+- Frontend, Engine, Datenbank, Desktop, Tests, UX, Inhalte, Datenschutz, Organisation
 
 ## Entwicklung
 

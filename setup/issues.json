@@ -1,107 +1,107 @@
 [
   {
-    "title": "Projekt aufsetzen: Vite, Vue 3, TypeScript, Pinia, Router",
-    "body": "Vite-App mit Vue 3 und TypeScript anlegen. Pinia und vue-router einbinden, Routen /moderation, /praesentation, /inhalte, /einstellungen als leere Views. Design-Tokens (tokens.css, base.css) mit Hell/Dunkel und Atkinson Hyperlegible über @fontsource. ESLint/Prettier, Vitest einrichten.",
+    "title": "Grundgerüst: Vite, Vue 3, TypeScript, Pinia, Router, Design-Tokens",
+    "body": "Vite-App mit Vue 3 und TypeScript, Pinia, vue-router mit /, /training, /verlauf, /verwaltung als Platzhalter. Design-Tokens hell/dunkel, Atkinson Hyperlegible lokal.",
     "milestone_name": "Phase 1: Grundgerüst",
     "labels": ["Frontend"],
+    "due_offset_days": 3
+  },
+  {
+    "title": "Dexie-Schema v1 und Tauri-Vollbildfenster",
+    "body": "Tabellen profiles, skills, attempts, sessions, items, settings. storage.persist(). Tauri 2 mit Fenster 'main' im Vollbild, NSIS currentUser, CSP nur self. Fertig, wenn ein leeres Vollbildfenster als Tauri-App und im Browser startet.",
+    "milestone_name": "Phase 1: Grundgerüst",
+    "labels": ["Datenbank", "Desktop"],
     "due_offset_days": 5
   },
   {
-    "title": "Dexie-Schema v1 und navigator.storage.persist()",
-    "body": "src/db/database.ts mit den Tabellen items, settings, sessions, sessionEvents laut Konzept. enabled als 0/1, seedKey indiziert. Beim ersten Start storage.persist() anfordern.",
-    "milestone_name": "Phase 1: Grundgerüst",
-    "labels": ["Datenbank"],
-    "due_offset_days": 7
-  },
-  {
-    "title": "Tauri 2 initialisieren",
-    "body": "npm i -D @tauri-apps/cli, npx tauri init. tauri.conf.json mit identifier de.rossmann-it.gedaechtnisstunde, CSP nur self, Fenster 'moderation'. Fertig, wenn ein leeres Fenster als Tauri-App und im Browser startet. Entscheidung Tauri vs. Electron vorher festhalten.",
-    "milestone_name": "Phase 1: Grundgerüst",
-    "labels": ["Desktop"],
+    "title": "Engine-Typen, Registry und adaptive Regel nextLevel()",
+    "body": "types.ts (Task, Option, ExerciseDefinition), registry.ts, adaptive.ts: 3 saubere Treffer +1, 2 Fehler -1, Hinweis/2. Versuch neutral; Start Niveau 2; nach 14 Tagen Pause -1; Festhalten. Vitest mit festen Antwortfolgen.",
+    "milestone_name": "Phase 2: Engine und Adaptivität",
+    "labels": ["Engine", "Tests"],
     "due_offset_days": 10
   },
   {
-    "title": "Übungs-Engine: types.ts, Registry, Shuffle-Bags",
-    "body": "ExerciseDefinition, Task, GenerateContext (mit injizierbarem random). Registry aller Übungen. content-Store mit draw() und Shuffle-Bags: keine Wiederholung, bevor alle Inhalte einer Stufe dran waren.",
-    "milestone_name": "Phase 2: Übungs-Engine",
-    "labels": ["Engine"],
-    "due_offset_days": 14
+    "title": "9 Generatoren mit Niveau 1–10",
+    "body": "Farben lesen, Auf dem Kopf, Rückwärts lesen, Sprichwörter, Was passt nicht?, Gegenteile, Begriffe finden, Merken, Rechnen. 2–4 Antworten, genau eine richtig, Hinweis und Erklärung. Vitest für alle 10 Niveaus mit festem Zufall.",
+    "milestone_name": "Phase 2: Engine und Adaptivität",
+    "labels": ["Engine", "Tests"],
+    "due_offset_days": 20
   },
   {
-    "title": "Generatoren aus dem Prototyp portieren (10 Übungen)",
-    "body": "Farben lesen, Auf dem Kopf, Rückwärts lesen, Sprichwörter, Was passt nicht?, Gegenteile, Begriffe finden, Merken (mit cover), Rechnen, Gemischt. Stroop: Rot und Grün nie als einziges Paar. Generatoren ohne DOM- und DB-Zugriff.",
-    "milestone_name": "Phase 2: Übungs-Engine",
-    "labels": ["Engine"],
-    "due_offset_days": 21
+    "title": "planner.ts und Seed-Inhalte mit Ablenkern",
+    "body": "Aufwärmen (3 Aufgaben, ein Niveau tiefer), Blöcke à 5 Aufgaben, Übungswechsel, Ende nach Einheitslänge. Seed-JSON mit Niveaubereich, Ablenkern und seedKey; content-Store mit Shuffle-Bags. Alle Inhalte eigene, nichts aus SimA.",
+    "milestone_name": "Phase 2: Engine und Adaptivität",
+    "labels": ["Engine", "Inhalte"],
+    "due_offset_days": 25
   },
   {
-    "title": "Seed-Inhalte als JSON und Generator-Tests",
-    "body": "Standardinhalte je Übung und Stufe unter src/db/seed/ mit Versionsnummer und stabilem seedKey. Vitest prüft jeden Generator für alle 3 Stufen mit festem Zufall.",
-    "milestone_name": "Phase 2: Übungs-Engine",
-    "labels": ["Tests", "Engine"],
-    "due_offset_days": 24
-  },
-  {
-    "title": "Stage-Komponenten und session-Store",
-    "body": "StageFrame, BigWord, Tiles, Quote, Receipt, Dots, Solution. session-Store mit Phasen shown → covered → revealed, next(), advance(), setExercise(), setLevel(). Mindestens 48 px auf 1080p, fontScale in 4 Stufen, Kontrast 7:1.",
-    "milestone_name": "Phase 3: Moderationsansicht",
+    "title": "Startansicht mit Profilwahl",
+    "body": "Profilkacheln mit Lucide-Symbol und Rufname, Schalter 'Mit Begleitung', 'Los geht's'. profile-Store mit select/create, Startniveau 2.",
+    "milestone_name": "Phase 3: Training allein",
     "labels": ["Frontend", "UX"],
     "due_offset_days": 30
   },
   {
-    "title": "Steuerung: Tabs, Stufenwahl, Kontrollleiste, Tastatur",
-    "body": "Reka UI Tabs und ToggleGroup, Lucide-Icons, Tooltips mit Tastenkürzeln. useKeyboard: Leertaste/Pfeil rechts/Bild-ab = Nächste, Enter = Verdecken/Lösung, 1–3 = Stufe, F = Vollbild. useFullscreen, useWakeLock, prefers-reduced-motion. Fertig, wenn eine komplette Stunde mit einem Bildschirm läuft.",
-    "milestone_name": "Phase 3: Moderationsansicht",
+    "title": "Trainingsansicht: Antwortflächen, Hinweis- und Lösungsablauf",
+    "body": "TaskFrame, AnswerGrid, AnswerButton (>= 96 px, 400 ms entprellt), Feedback ohne Rot, ProgressDots. training-Store: answer, 1. Fehler ausgrauen + Hinweis, 2. Fehler Lösung + Erklärung, attempts speichern, applyResult.",
+    "milestone_name": "Phase 3: Training allein",
     "labels": ["Frontend", "UX"],
-    "due_offset_days": 35
+    "due_offset_days": 37
   },
   {
-    "title": "Inhalts-Editor mit Reka-Dialog und zod",
-    "body": "ContentView: Einträge je Übung/Stufe anzeigen, anlegen, bearbeiten, (de)aktivieren, löschen. Validierung über itemSchema (zod) je Übung. Hinweis: keine Namen von Bewohnern eintragen.",
-    "milestone_name": "Phase 4: Inhalte und Daten",
-    "labels": ["Frontend", "Datenbank"],
+    "title": "Zwischen- und Abschlussbildschirm, Wake Lock, Leerlauf",
+    "body": "Zwischenbildschirm nach jedem Block, Abschluss mit geübten Minuten ohne Punkte. useWakeLock, useIdle ('Möchten Sie weitermachen?' nach 2 min), useSound optional. Fertig, wenn eine 15-Minuten-Einheit ohne Tastatur durchläuft.",
+    "milestone_name": "Phase 3: Training allein",
+    "labels": ["Frontend", "UX"],
     "due_offset_days": 42
   },
   {
-    "title": "Seed-Update ohne Überschreiben eigener Inhalte",
-    "body": "Beim Start Seed-Version mit settings.seedVersion vergleichen, source:'seed' per seedKey per bulkPut aktualisieren. Test: eigene Einträge überstehen ein Seed-Update.",
-    "milestone_name": "Phase 4: Inhalte und Daten",
-    "labels": ["Datenbank", "Tests"],
-    "due_offset_days": 45
-  },
-  {
-    "title": "Export/Import und Stundenprotokoll",
-    "body": "Export/Import der Inhalte als .json (dexie-export-import, in Tauri über plugin-dialog/fs). Export-Erinnerung alle 30 Tage. Stundenprotokoll: Übung, Stufe, Zeitpunkt in sessions/sessionEvents, ohne personenbezogene Daten; Stunde beenden per AlertDialog.",
-    "milestone_name": "Phase 4: Inhalte und Daten",
-    "labels": ["Datenbank"],
+    "title": "Begleitleiste im betreuten Modus",
+    "body": "CompanionBar mit Tipp, Hinweis, Lösung ansehen, Mündlich richtig/Nicht gewusst, Überspringen, Niveau -/+ und Festhalten, Pause/Beenden. Einschalten per 2 s Druck auf HandHelping. Tasten H/S/P. assisted: true speichern.",
+    "milestone_name": "Phase 4: Betreuter Modus",
+    "labels": ["Frontend"],
     "due_offset_days": 49
   },
   {
-    "title": "Präsentationsfenster und BroadcastChannel",
-    "body": "PresentationView zeigt nur Frage und Aufgabe. Öffnen über WebviewWindow (Tauri) bzw. window.open. usePresenterChannel synchronisiert task und phase über BroadcastChannel('gs-session'); Moderation ist einzige Quelle.",
-    "milestone_name": "Phase 5: Zwei Bildschirme und PWA",
-    "labels": ["Frontend"],
-    "due_offset_days": 56
+    "title": "Offene Aufgaben und Playwright für beide Modi",
+    "body": "Offene Aufgaben (Begriffe sammeln, Sprichwort erklären) nur betreut, Wertung über judge(). Playwright-Test: dieselbe Einheit allein und betreut.",
+    "milestone_name": "Phase 4: Betreuter Modus",
+    "labels": ["Frontend", "Tests"],
+    "due_offset_days": 54
   },
   {
-    "title": "PWA: Manifest, Service Worker, Update-Hinweis",
-    "body": "vite-plugin-pwa mit registerType 'prompt', im Tauri-Build deaktiviert. Icons 192/512/maskable. Update-Hinweis nur in den Einstellungen. Playwright-Test des Ablaufs mit zwei Fenstern.",
-    "milestone_name": "Phase 5: Zwei Bildschirme und PWA",
-    "labels": ["Frontend", "Tests"],
+    "title": "PIN, Verwaltung und Profilverwaltung",
+    "body": "PIN als SHA-256-Hash mit Salt (crypto.subtle), PinInputRoot, Router-Guard für /verlauf und /verwaltung. Profile anlegen, bearbeiten, löschen inkl. skills, attempts, sessions. Einheitslänge, Ton, Schriftgröße.",
+    "milestone_name": "Phase 5: Verwaltung und Verlauf",
+    "labels": ["Frontend", "Datenschutz"],
     "due_offset_days": 60
   },
   {
-    "title": "NSIS-Installer und CI-Build",
-    "body": "Tauri-Bundle NSIS, installMode currentUser, Sprache Deutsch, webviewInstallMode embedBootstrapper. Build per CI auf Windows (tauri-action). Code-Signing-Zertifikat beschaffen und einbinden.",
-    "milestone_name": "Phase 6: Paket und Pilot",
-    "labels": ["Desktop"],
+    "title": "Inhalts-Editor, Seed-Update, Export/Import",
+    "body": "Editor mit zod. Seed-Update per seedKey ohne Überschreiben eigener Einträge (Test). Export/Import .json, in Tauri über plugin-dialog/fs; Export-Erinnerung alle 30 Tage.",
+    "milestone_name": "Phase 5: Verwaltung und Verlauf",
+    "labels": ["Datenbank"],
     "due_offset_days": 66
   },
   {
-    "title": "Installationsanleitung und Pilot in einer Einrichtung",
-    "body": "Bebilderte Anleitung (inkl. SmartScreen-Hinweis). Standardinhalte fachlich prüfen lassen. Pilot: Betreuungskräfte installieren ohne Hilfe und führen eine Stunde durch. Offene Fragen klären: Hardware in den Heimen, Verteilung, Umfang Protokoll.",
+    "title": "Verlauf je Profil und Service Worker",
+    "body": "Geübte Minuten pro Woche, aktuelles Niveau je Übung, betreut getrennt, Hinweis 'kein Test', keine Punkte und kein Trend-Urteil. vite-plugin-pwa für die Browser-Variante, Update-Hinweis nur in den Einstellungen.",
+    "milestone_name": "Phase 5: Verwaltung und Verlauf",
+    "labels": ["Frontend"],
+    "due_offset_days": 70
+  },
+  {
+    "title": "NSIS-Installer, Signierung, CI",
+    "body": "Code-Signing-Zertifikat beschaffen und einbinden, Build per CI auf Windows, bebilderte Installationsanleitung.",
+    "milestone_name": "Phase 6: Paket und Pilot",
+    "labels": ["Desktop"],
+    "due_offset_days": 76
+  },
+  {
+    "title": "4 Wochen Pilot und Feinjustierung der adaptiven Regel",
+    "body": "Pilot in einer Einrichtung, Auswertung der Erfolgsquote (Ziel ca. 80 %), Regel nachjustieren. Offene Fragen klären: Hardware, Einstufung, Einheitslänge, fachliche Prüfung der Inhalte, Datenschutz/DSFA, Name und Abgrenzung zu SimA.",
     "milestone_name": "Phase 6: Paket und Pilot",
     "labels": ["Organisation"],
-    "due_offset_days": 75
+    "due_offset_days": 110
   }
 ]

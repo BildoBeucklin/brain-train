@@ -3,5 +3,5 @@ import PlaceholderView from './PlaceholderView.vue'
 </script>
 
 <template>
-  <PlaceholderView title="Präsentation" description="Anzeige für Beamer oder TV." />
+  <PlaceholderView title="Training" description="Eine Aufgabe, große Antwortflächen." />
 </template>

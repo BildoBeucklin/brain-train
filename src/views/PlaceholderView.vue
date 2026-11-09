@@ -5,10 +5,10 @@ import { Brain } from 'lucide-vue-next'
 defineProps<{ title: string; description: string }>()
 
 const links = [
-  { to: '/moderation', label: 'Moderation' },
-  { to: '/praesentation', label: 'Präsentation' },
-  { to: '/inhalte', label: 'Inhalte' },
-  { to: '/einstellungen', label: 'Einstellungen' },
+  { to: '/', label: 'Start' },
+  { to: '/training', label: 'Training' },
+  { to: '/verlauf', label: 'Verlauf' },
+  { to: '/verwaltung', label: 'Verwaltung' },
 ]
 </script>
 
@@ -18,7 +18,7 @@ const links = [
     <h1>{{ title }}</h1>
     <p>{{ description }}</p>
     <nav aria-label="Ansichten">
-      <RouterLink v-for="l in links" :key="l.to" :to="l.to">{{ l.label }}</RouterLink>
+      <RouterLink v-for="l in links" :key="l.to" :to="l.to" exact-active-class="active">{{ l.label }}</RouterLink>
     </nav>
   </main>
 </template>
@@ -35,7 +35,7 @@ const links = [
   color: var(--color-primary);
 }
 h1 { font-size: var(--text-stage); margin: 0; color: var(--color-text); }
-p { font-size: var(--text-prompt); margin: 0; color: var(--color-text-muted); }
+p { font-size: var(--text-task); margin: 0; color: var(--color-text-muted); }
 nav { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
 a {
   padding: var(--space-2) var(--space-4);
@@ -45,7 +45,7 @@ a {
   color: var(--color-text);
   text-decoration: none;
 }
-a.router-link-active {
+a.active {
   background: var(--color-primary);
   color: var(--color-on-primary);
   border-color: var(--color-primary);

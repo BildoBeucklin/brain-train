@@ -3,5 +3,5 @@ import PlaceholderView from './PlaceholderView.vue'
 </script>
 
 <template>
-  <PlaceholderView title="Moderation" description="Hier entsteht die Steuerung der Gruppenstunde." />
+  <PlaceholderView title="Verwaltung" description="Profile, Inhalte und Einstellungen." />
 </template>

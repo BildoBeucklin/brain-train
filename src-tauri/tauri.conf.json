@@ -13,8 +13,9 @@
   "app": {
     "windows": [
       {
-        "label": "moderation",
+        "label": "main",
         "title": "Gedächtnisstunde",
+        "fullscreen": true,
         "width": 1280,
         "height": 800,
         "minWidth": 900,
@@ -30,14 +31,29 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
+    "targets": [
+      "nsis"
+    ],
     "publisher": "Rossmann IT Solutions",
     "category": "Education",
     "shortDescription": "Gedächtnistraining für Gruppen",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico", "icons/icon.png"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
     "windows": {
-      "webviewInstallMode": { "type": "embedBootstrapper" },
-      "nsis": { "installMode": "currentUser", "languages": ["German"] }
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
+      },
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": [
+          "German"
+        ]
+      }
     }
   }
 }

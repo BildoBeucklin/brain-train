@@ -1,0 +1,46 @@
+name: Deploy Demo (Dev) 🚧
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  DEMO_NAME: "10000-TR-website-dev"
+
+jobs:
+  deploy-to-demo:
+    runs-on: ubuntu-latest
+
+    container:
+      image: node:22
+      volumes:
+
+        - infrastructure_demo_data:/mnt/demos
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+
+      - name: 📦 Build Project
+        run: |
+          npm install
+          # Wir setzen die Base-URL für CSS/JS Assets (Das brauchst du weiterhin!)
+          export MY_BASE_PATH="/${{ env.DEMO_NAME }}"
+          npm run build
+
+      - name: 🚚 Copy to Demo Volume
+        run: |
+          # Zielordner im Container (siehe volumes oben)
+          TARGET_DIR="/mnt/demos/${{ env.DEMO_NAME }}"          
+          echo "Start Deployment nach: $TARGET_DIR"
+
+          # Aufräumen & neu erstellen
+          rm -rf "$TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
+
+          # Inhalt kopieren
+          # cp -a kopiert alles rekursiv und behält Attribute
+          cp -a dist/. "$TARGET_DIR/"
+
+          echo "✅ Fertig! Prüfe https://showroom.rossmann-it-solutions.de"

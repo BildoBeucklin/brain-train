@@ -1,0 +1,82 @@
+name: Update Project Plan 📅
+
+on:
+  issues:
+    types: [opened, closed, reopened]
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  generate-plan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      # SCHRITT 1: Repo ziehen (Pull)
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+        with:
+          # Wir brauchen die History, um pushen zu können
+          fetch-depth: 0
+          # Wir nutzen den Gitea-Token für die Auth
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # SCHRITT 2: Python einrichten
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: ⚙️ Install Requests
+        run: pip install requests
+
+      # SCHRITT 3: Dein Skript ausführen
+      - name: 🏃 Run Generator Script
+        env:
+          # Hier nutzen wir den automatisch generierten Token von Gitea
+          # Der hat Zugriff auf die Issues!
+          API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ gitea.repository }}
+        run: |
+          # Pfad zum Skript anpassen!
+          python3 .gitea/scripts/gitea-to-mermaid.py
+
+      # SCHRITT 3b: Lunatask Sync ausführen
+      - name: 🌙 Sync to Lunatask
+        env:
+          API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ gitea.repository }}
+          LUNATASK_API_TOKEN: ${{ secrets.LUNATASK_API_TOKEN }}
+          LUNATASK_AREA_ID: ${{ secrets.LUNATASK_AREA_ID }}
+          LUNATASK_GOAL_ID: ${{ secrets.LUNATASK_GOAL_ID }}
+        run: |
+          python3 .gitea/scripts/gitea-to-lunatask.py
+
+      # SCHRITT 4: Änderungen erkennen & Pushen
+      - name: 💾 Commit & Push
+        run: |
+          # Git konfigurieren (als Bot tarnen)
+          git config --global user.name "Project Plan Bot"
+          git config --global user.email "bot@rossmann-it-solutions.de"
+
+          # Prüfen, ob sich PLAN.md geändert hat
+          git add PLAN.md
+
+          # Wenn nichts geändert wurde, bricht der Schritt hier sauber ab (statt Fehler)
+          if git diff-index --quiet HEAD; then
+            echo "Keine Änderungen am Plan. Alles aktuell."
+            exit 0
+          fi
+
+          # Commit erstellen
+          # [skip ci] ist WICHTIG, damit der Bot nicht wieder den Workflow triggert (Endlosschleife!)
+          git commit -m "Update Project Plan (Auto-Generated) [skip ci]"
+
+          git pull --rebase origin dev
+
+          # Pushen (Der Token aus Schritt 1 wird genutzt)
+          git push origin HEAD:dev

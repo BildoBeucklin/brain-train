@@ -1,0 +1,43 @@
+name: 🚀 Initialize Issues (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Tippe "yes" um Issues anzulegen'
+        required: true
+        default: "yes"
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: ⚙️ Install Requests
+        run: pip install requests
+
+      - name: 🚀 Run Issue Creator
+        env:
+          # Der Runner stellt diesen Token automatisch bereit!
+          # Er hat Zugriff auf das aktuelle Repo.
+          API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Gitea übergibt "Owner/RepoName" automatisch hier:
+          GITHUB_REPOSITORY: ${{ gitea.repository }}
+        run: |
+          if [ "${{ inputs.confirm }}" == "yes" ]; then
+            python3 setup/create_issues.py
+          else
+            echo "Abbruch: Bestätigung fehlt."
+            exit 1
+          fi

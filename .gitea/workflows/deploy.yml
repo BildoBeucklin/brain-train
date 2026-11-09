@@ -1,0 +1,45 @@
+name: Deploy to Hetzner FTP
+
+on:
+  push:
+    branches:
+      - main # Löst die Aktion nur bei Änderungen im main-Branch aus
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Falls du einen Build-Schritt für Astro hast
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22' # Passende Node.js-Version für dein Astro-Projekt
+    - name: Install dependencies
+      run: npm install
+    - name: Fix vulnerabilities
+      run: npm audit fix
+    - name: Build project
+      run: npm run build
+
+    # Ersetze die Platzhalter in der fertigen Datei
+    - name: Inject Secrets into Config
+      run: |
+        # 1. Prüfen, wo die Datei liegt (zur Sicherheit im Log)
+        ls -l dist/admin/config.yml
+        
+        # 2. Den Platzhalter in der config.yml ersetzen
+        sed -i "s/REPLACE_CLIENT_ID/${{ secrets.OAUTH_CLIENT_ID }}/g" dist/admin/config.yml
+
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftps 
+        port: 21
+        local-dir: ./dist/ # Der Ordner mit den fertigen Webseiten-Dateien 

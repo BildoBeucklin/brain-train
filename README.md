@@ -27,3 +27,15 @@ Ausführliches Konzept: [docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md)
 
 **Standard Label:**
 - Frontend, Engine, Datenbank, Desktop, Tests, UX, Organisation
+
+## Entwicklung
+
+Voraussetzungen: Node 20+, Rust (rustup), Visual Studio Build Tools mit „Desktop development with C++“.
+
+```sh
+npm install
+npm run dev          # Browser: http://localhost:5173
+npm run tauri dev    # Desktop-Fenster
+npm test             # Vitest
+npm run tauri build  # Installer unter src-tauri/target/release/bundle/nsis/
+```

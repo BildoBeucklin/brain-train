@@ -6,9 +6,9 @@ import BigButton from '@/components/BigButton.vue'
 import { PROFILE_ICONS } from '@/components/icons'
 import { PROFILE_SYMBOLS, type ProfileSymbol } from '@/stores/profile'
 
-/** Neues Profil: Rufname und Symbol (für die Begleitperson; die Verwaltung mit PIN folgt in Meilenstein 5). */
+/** Profil anlegen/bearbeiten: Rufname und Symbol (nur in der Verwaltung). */
 const open = defineModel<boolean>('open', { required: true })
-const props = defineProps<{ usedSymbols: string[] }>()
+const props = defineProps<{ usedSymbols: string[]; initial?: { name: string; symbol: ProfileSymbol } }>()
 const emit = defineEmits<{ save: [name: string, symbol: ProfileSymbol] }>()
 
 const name = ref('')
@@ -17,8 +17,8 @@ const valid = computed(() => name.value.trim().length > 0 && name.value.trim().l
 
 watch(open, (o) => {
   if (!o) return
-  name.value = ''
-  symbol.value = PROFILE_SYMBOLS.find((s) => !props.usedSymbols.includes(s.id))?.id ?? null
+  name.value = props.initial?.name ?? ''
+  symbol.value = props.initial?.symbol ?? PROFILE_SYMBOLS.find((s) => !props.usedSymbols.includes(s.id))?.id ?? null
 })
 
 function save() {
@@ -33,7 +33,7 @@ function save() {
     <DialogPortal>
       <DialogOverlay class="overlay" />
       <DialogContent class="dialog" @submit.prevent>
-        <DialogTitle class="title">Neues Profil</DialogTitle>
+        <DialogTitle class="title">{{ initial ? 'Profil bearbeiten' : 'Neues Profil' }}</DialogTitle>
         <DialogDescription class="desc">Bitte nur den Rufnamen eintragen, keinen Nachnamen.</DialogDescription>
 
         <label class="field">

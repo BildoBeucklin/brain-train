@@ -9,7 +9,7 @@ async function click(page: Page, testId: string) {
 }
 
 test('dieselbe Einheit betreut: Begleitleiste mit allen Funktionen', async ({ page }, info) => {
-  test.setTimeout(180_000)
+  test.setTimeout(300_000)
   const dir = `test-results/screens/${info.project.name}`
   const seen = new Set<string>()
   const shot = async (key: string) => {

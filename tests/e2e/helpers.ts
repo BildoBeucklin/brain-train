@@ -34,12 +34,49 @@ export async function expectAnswerSizes(page: Page, where: string) {
   }
 }
 
+export const TEST_PIN = '2580'
+
+/** PIN über den Bildschirm-Ziffernblock eingeben. */
+export async function typePin(page: Page, pin = TEST_PIN) {
+  await page.waitForTimeout(DEBOUNCE) // vorheriger Klick darf die erste Ziffer nicht entprellen
+  for (const d of pin) {
+    await page.getByTestId(`pin-key-${d}`).click()
+    await page.waitForTimeout(DEBOUNCE)
+  }
+}
+
+/** Öffnet die Verwaltung; legt beim ersten Mal die PIN fest. */
+export async function openAdmin(page: Page) {
+  await page.getByTestId('to-admin').click()
+  const create = page.getByRole('heading', { name: 'PIN festlegen' })
+  const enter = page.getByRole('heading', { name: 'Verwaltung' })
+  await expect(create.or(enter)).toBeVisible()
+  if (await create.isVisible()) {
+    await typePin(page)
+    await expect(page.getByRole('heading', { name: 'PIN wiederholen' })).toBeVisible()
+  }
+  await typePin(page)
+  await expect(page.getByTestId('tab-profile')).toBeVisible()
+}
+
+export async function leaveAdmin(page: Page) {
+  await page.waitForTimeout(DEBOUNCE)
+  await page.getByTestId('leave-admin').click()
+  await page.waitForTimeout(DEBOUNCE)
+  await expect(page.getByRole('heading', { name: 'Guten Tag! Wer trainiert heute?' })).toBeVisible()
+}
+
+/** Profil über die Verwaltung anlegen (Begleitperson tippt den Namen – nicht im Training). */
 export async function createProfile(page: Page, name: string) {
-  await page.getByRole('button', { name: 'Neues Profil' }).click()
-  // Die Begleitperson tippt den Namen – einziger Tastaturschritt, nicht im Training
+  await openAdmin(page)
+  await page.getByTestId('add-profile').click()
   await page.getByLabel('Rufname').fill(name)
   await page.waitForTimeout(DEBOUNCE)
   await page.getByRole('button', { name: 'Speichern' }).click()
+  await page.waitForTimeout(DEBOUNCE)
+  await expect(page.getByTestId('profile-row').filter({ hasText: name })).toBeVisible()
+  await leaveAdmin(page)
+  await page.getByRole('button', { name }).click()
   await page.waitForTimeout(DEBOUNCE)
 }
 

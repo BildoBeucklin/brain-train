@@ -223,3 +223,15 @@ NSIS-Installer ohne Adminrechte, Deutsch, `embedBootstrapper`, Fenster `main` im
 | Alter PC ohne WebView2 | App startet nicht | embedBootstrapper |
 | SmartScreen-Warnung | Installation abgebrochen | Code-Signing, bebilderte Anleitung |
 | Reka-UI-API-Änderungen | Update-Aufwand | Version pinnen, Primitive kapseln |
+
+## Umsetzung Meilenstein 5 (Verwaltung und Verlauf)
+
+- **Zugang:** Unauffälliger Link „Verwaltung“ oben rechts auf dem Startbildschirm; Profile werden nur noch dort angelegt (nicht mehr auf dem Startbildschirm). Beim ersten Öffnen wird eine 4-stellige PIN festgelegt (zweimal eingeben), gespeichert als SHA-256 mit zufälligem Salt. Entsperrt bis zum Verlassen oder 10 Minuten ohne Eingabe.
+- **Reiter:** Profile (anlegen, bearbeiten, löschen inkl. Niveaus/Verlauf), Inhalte (je Übung; Standardinhalte an/aus, eigene anlegen/bearbeiten/löschen, Prüfung mit zod), Verlauf (Minuten pro Woche allein/mit Begleitung, Niveau je Übung, Hinweis „kein Test und keine Diagnose“), Einstellungen (Einheitslänge 10/15/20/30 min, Ton, Schriftgröße, Hell/Dunkel, PIN ändern, Sicherung, Update-Hinweis).
+- **Export/Import:** eigene Implementierung statt dexie-export-import (zwei klar getrennte Dateiarten, Validierung mit zod):
+  - „Inhalte teilen“: nur eigene Inhalte, keine Personendaten – zum Austausch zwischen Einrichtungen.
+  - „Sicherung“: Profile, Niveaus, Verlauf, eigene Inhalte, Einstellungen (ohne PIN). Beim Einlesen wird gefragt, ob Profile und Verlauf ersetzt werden; Inhalte werden immer nur ergänzt (Duplikate übersprungen).
+  - Tauri: nativer Speichern-/Öffnen-Dialog (`plugin-dialog`, `plugin-fs`; Rechte nur für die gewählte Datei). Browser: Download bzw. Dateiauswahl.
+  - Erinnerung in den Einstellungen, wenn die letzte Sicherung länger als 30 Tage her ist.
+- **Verlauf:** Trainingszeit je Einheit wird als `activeMs` (ohne Pausen) gespeichert; fehlt sie, zählen die Antwortzeiten (je Aufgabe höchstens 5 min).
+- **PWA:** vite-plugin-pwa nur in der Browser-Variante, `registerType: 'prompt'`, Hinweis „Neue Version verfügbar“ nur in den Einstellungen.

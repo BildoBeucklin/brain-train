@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Fenster main: Grundrechte, Speichern-/÷ffnen-Dialog und Lesen/Schreiben der dort gew‰hlten Datei (Export/Import)",
+  "description": "Fenster main: Grundrechte, Speichern-/√ñffnen-Dialog und Lesen/Schreiben der dort gew√§hlten Datei (Export/Import)",
   "windows": [
     "main"
   ],

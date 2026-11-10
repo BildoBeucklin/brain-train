@@ -161,34 +161,4 @@ const run = (fn: () => void) => () => { if (acceptTap()) fn() }
   line-height: 1.4;
   box-shadow: 0 6px 24px rgb(0 0 0 / 0.25);
 }
-.dlg-overlay { position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); }
-.dlg {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: var(--space-5);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  color: var(--color-text);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  min-width: 480px;
-}
-.dlg-title { margin: 0; font-size: var(--text-task); }
-.dlg-text { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); }
-.dlg-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-3); }
-.dlg-btn {
-  min-height: 64px;
-  padding: 0 var(--space-3);
-  border-radius: 12px;
-  border: 3px solid var(--color-control-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: var(--text-help);
-  font-weight: 700;
-  cursor: pointer;
-}
-.dlg-btn.primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
 </style>

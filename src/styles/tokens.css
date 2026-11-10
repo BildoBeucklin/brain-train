@@ -64,6 +64,10 @@
   --profile-cat: #6b4a2b;
   --profile-anchor: #1e5e55;
   --profile-coffee: #7a3ba8;
+
+  /* Verlauf-Diagramm (mit dataviz-Validator geprüft: CVD, Kontrast >= 3:1) */
+  --series-alone: #2a78d6;
+  --series-assisted: #eb6834;
 }
 
 :root[data-theme='dark'] {
@@ -96,4 +100,7 @@
   --profile-cat: #d9aa80;
   --profile-anchor: #7cc8bb;
   --profile-coffee: #cda6f0;
+
+  --series-alone: #3987e5;
+  --series-assisted: #d95926;
 }

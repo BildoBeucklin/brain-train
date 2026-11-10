@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
-import { HandHelping, Play } from 'lucide-vue-next'
+import { HandHelping, Play, Settings2 } from 'lucide-vue-next'
 import BigButton from '@/components/BigButton.vue'
 import ProfileTile from '@/components/profile/ProfileTile.vue'
-import ProfileEditor from '@/components/profile/ProfileEditor.vue'
-import { useProfileStore, type ProfileSymbol } from '@/stores/profile'
+import { useProfileStore } from '@/stores/profile'
 import { useSettingsStore } from '@/stores/settings'
 import { useTrainingStore } from '@/stores/training'
 
@@ -19,7 +18,6 @@ const router = useRouter()
 
 const selectedId = ref<number | null>(profile.profiles.length === 1 ? profile.profiles[0]!.id! : null)
 const assisted = ref(settings.values.mode === 'assisted')
-const editorOpen = ref(false)
 const starting = ref(false)
 
 // Neue Profile (noch keine Einheit) starten standardmäßig mit Begleitung
@@ -28,11 +26,6 @@ watch(selectedId, async (id) => {
 }, { immediate: true })
 
 const tiles = computed(() => profile.profiles.slice(0, MAX_TILES))
-const canAdd = computed(() => profile.profiles.length < MAX_TILES)
-
-async function onSave(name: string, symbol: ProfileSymbol) {
-  selectedId.value = await profile.create(name, symbol)
-}
 
 async function go() {
   if (selectedId.value == null || starting.value) return
@@ -44,7 +37,13 @@ async function go() {
 
 <template>
   <main class="start">
-    <h1>Guten Tag! Wer trainiert heute?</h1>
+    <header class="head">
+      <h1>Guten Tag! Wer trainiert heute?</h1>
+      <!-- für Begleitpersonen; bewusst unauffällig -->
+      <RouterLink to="/verwaltung" class="admin-link" data-testid="to-admin">
+        <Settings2 :size="22" aria-hidden="true" /><span>Verwaltung</span>
+      </RouterLink>
+    </header>
 
     <div class="tiles">
       <ProfileTile
@@ -55,8 +54,10 @@ async function go() {
         :selected="selectedId === p.id"
         @press="selectedId = p.id!"
       />
-      <ProfileTile v-if="canAdd" name="Neues Profil" @press="editorOpen = true" />
     </div>
+    <p v-if="tiles.length === 0" class="no-profiles" data-testid="no-profiles">
+      Es gibt noch kein Profil. Eine Begleitperson legt es unter „Verwaltung“ an.
+    </p>
 
     <div class="bottom">
       <label class="toggle">
@@ -77,7 +78,6 @@ async function go() {
       />
     </div>
 
-    <ProfileEditor v-model:open="editorOpen" :used-symbols="profile.profiles.map((p) => p.icon)" @save="onSave" />
   </main>
 </template>
 
@@ -92,6 +92,14 @@ async function go() {
   margin-inline: auto;
 }
 h1 { margin: 0; font-size: var(--text-task); text-align: left; }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.admin-link {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 0 var(--space-2);
+  border: 2px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
+  font-size: var(--text-min); text-decoration: none; flex: none;
+}
+.admin-link:hover { border-color: var(--color-control-border); color: var(--color-text); }
+.no-profiles { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); grid-row: 2; align-self: center; }
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(220px, 1fr));

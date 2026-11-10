@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    /** Nur nach PIN-Eingabe erreichbar (Guard folgt in Meilenstein 5). */
+    /** Nur nach PIN-Eingabe nutzbar; AdminView zeigt sonst die PIN-Abfrage. */
     requiresPin?: boolean
   }
 }
@@ -13,7 +13,7 @@ export const router = createRouter({
   routes: [
     { path: '/', name: 'start', component: () => import('@/views/StartView.vue') },
     { path: '/training', name: 'training', component: () => import('@/views/TrainingView.vue') },
-    { path: '/verlauf', name: 'verlauf', component: () => import('@/views/HistoryView.vue'), meta: { requiresPin: true } },
+    { path: '/verlauf', redirect: { name: 'verwaltung', query: { tab: 'verlauf' } } },
     { path: '/verwaltung', name: 'verwaltung', component: () => import('@/views/AdminView.vue'), meta: { requiresPin: true } },
     ...(import.meta.env.DEV
       ? [{ path: '/vorschau', name: 'vorschau', component: () => import('@/views/PreviewView.vue') }]

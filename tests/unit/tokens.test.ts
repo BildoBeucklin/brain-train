@@ -39,6 +39,8 @@ const UI_PAIRS: [string, string][] = [
   ['color-focus-ring', 'color-focus'],
   ...['flower', 'sun', 'bird', 'cat', 'anchor', 'coffee'].flatMap((p): [string, string][] => [
     [`profile-${p}`, 'color-surface'], [`profile-${p}`, 'color-bg']]),
+  ['series-alone', 'color-surface'],
+  ['series-assisted', 'color-surface'],
 ]
 
 describe.each(Object.entries(themes))('Theme %s', (_, t) => {

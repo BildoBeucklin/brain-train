@@ -22,7 +22,7 @@ export const CONTENT_FIELDS: Partial<Record<ExerciseId, Field[]>> = {
   proverbs: [
     { key: 'start', label: 'Anfang', type: 'text', help: 'z. B. „Morgenstund hat“' },
     { key: 'end', label: 'Ende', type: 'text', help: 'z. B. „Gold im Mund.“' },
-    { key: 'distractors', label: 'Falsche Enden', type: 'list', count: 3, min: 3 },
+    { key: 'distractors', label: 'Falsche Enden (für Niveau 1–7)', type: 'list', count: 3, min: 0 },
     { key: 'meaning', label: 'Bedeutung (für Niveau 8–10)', type: 'text', optional: true },
     { key: 'meaningDistractors', label: 'Falsche Bedeutungen', type: 'list', count: 3, min: 0 },
   ],
@@ -60,11 +60,12 @@ export const PAYLOAD_SCHEMAS: Partial<Record<ExerciseId, z.ZodType<Record<string
   upsideDown: z.object({ text: text(40), distractors: list(3, 40) }).superRefine(noDuplicateOf('text', 'distractors')),
   reverse: z.object({ text: text(16).regex(/^\S+$/, 'Nur ein Wort ohne Leerzeichen'), distractors: list(3, 20) }).superRefine(noDuplicateOf('text', 'distractors')),
   proverbs: z.object({
-    start: text(), end: text(), distractors: list(3),
+    start: text(), end: text(), distractors: list(0),
     meaning: z.string().trim().max(160).optional().transform((x) => x || undefined),
     meaningDistractors: list(0, 160).optional(),
   }).superRefine(noDuplicateOf('end', 'distractors')).superRefine((v, ctx) => {
     if (v.meaning && (v.meaningDistractors?.length ?? 0) < 3) ctx.addIssue({ code: 'custom', path: ['meaningDistractors'], message: 'Zur Bedeutung bitte 3 falsche Bedeutungen angeben' })
+    if (!v.meaning && v.distractors.length < 3) ctx.addIssue({ code: 'custom', path: ['distractors'], message: 'Mindestens 3 falsche Enden' })
   }),
   oddOneOut: z.object({ members: list(4, 40), odd: text(40), explanation: text(160) }).superRefine(noDuplicateOf('odd', 'members')),
   opposites: z.object({ word: text(40), opposite: text(40), distractors: list(3, 40) }).superRefine(noDuplicateOf('opposite', 'distractors')),
@@ -89,6 +90,10 @@ export function validateItem(exercise: ExerciseId, payload: unknown, minLevel: n
   if (!range.success) for (const i of range.error.issues) errors[String(i.path[0])] = i.message
   const p = schema.safeParse(payload)
   if (!p.success) for (const i of p.error.issues) errors[String(i.path[0] ?? '_')] ??= i.message
+  // Sprichwörter unter Niveau 8 fragen nach dem Ende → falsche Enden nötig
+  if (p.success && exercise === 'proverbs' && minLevel < 8 && ((p.data.distractors as string[]).length < 3)) {
+    errors.distractors = 'Unter Niveau 8 werden 3 falsche Enden gebraucht'
+  }
   return Object.keys(errors).length || !p.success ? { ok: false, errors } : { ok: true, payload: p.data }
 }
 

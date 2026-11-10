@@ -7,7 +7,9 @@ import './styles/base.css'
 import App from './App.vue'
 import { router } from './router'
 import { requestPersistentStorage } from './db/database'
+import { startPwa } from './composables/usePwaUpdate'
 
 createApp(App).use(createPinia()).use(router).mount('#app')
 
 void requestPersistentStorage()
+startPwa()

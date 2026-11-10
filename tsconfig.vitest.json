@@ -4,6 +4,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
     "types": [
       "vite/client",
+      "vite-plugin-pwa/client",
       "node",
       "vitest/globals"
     ]

@@ -59,6 +59,9 @@ Quelle: `src/styles/tokens.css`. Der Test `tests/unit/tokens.test.ts` prüft die
 - Simulation (Viénot/Brettel, Protanopie und Deuteranopie, ΔE in Lab): verwechselbar (ΔE < 20) sind **Rot/Grün, Rot/Braun, Blau/Lila, Grün/Orange, Grün/Braun**.
 - Regel im Generator: Die gesuchte Schriftfarbe ist nie mit einer der angebotenen Antworten verwechselbar. Grün kommt deshalb bei 4 Antworten nicht als Schriftfarbe vor. Der Test `stroop.test.ts` prüft das für alle Niveaus.
 
+### Verlauf-Diagramm
+Zwei Reihen „allein“ / „mit Begleitung“: Blau #2A78D6 / Orange #EB6834 (dunkel #3987E5 / #D95926), mit dem dataviz-Validator geprüft (Farbsehschwäche ΔE ≥ 24, Kontrast ≥ 3:1 auf der Fläche). Legende, Summe über jedem Balken, Tooltip, Tabellenansicht. Die Teal-Töne der App fallen dort durch (zu wenig Sättigung, Kontrast < 3:1).
+
 ## Komponenten
 - **AnswerButton**: Standard / Hover / Fokus / Gedrückt / Richtig (grüner Rahmen, Häkchen, „Richtig!“) / Ausgegraut (grau, leicht durchgestrichen, nicht klickbar) / Lösung (hervorgehoben, „Das ist die richtige Antwort“).
 - Bei Mehrfachauswahl (Merken) steht auf Lösungskarten kurz „Das war dabei“, Icon neben dem Text – sonst passen 9 Karten nicht auf 1280×800.

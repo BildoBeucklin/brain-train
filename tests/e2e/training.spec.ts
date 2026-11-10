@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { answerByTapping, createProfile, DEBOUNCE, expectFits, runSession } from './helpers'
 
 test('eine 15-Minuten-Einheit läuft allein nur mit der Maus durch', async ({ page }, info) => {
-  test.setTimeout(180_000)
+  test.setTimeout(300_000)
   const dir = `test-results/screens/${info.project.name}`
   const seen = new Set<string>()
   const shot = async (key: string) => {

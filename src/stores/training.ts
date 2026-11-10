@@ -236,7 +236,7 @@ export const useTrainingStore = defineStore('training', () => {
     runClock(false)
     planner?.finish()
     minutesTrained.value = Math.max(1, Math.round(elapsedMs() / 60_000))
-    if (sessionId.value != null) void db.sessions.update(sessionId.value, { endedAt: Date.now() })
+    if (sessionId.value != null) void db.sessions.update(sessionId.value, { endedAt: Date.now(), activeMs: elapsedMs() })
     task.value = null
     stage.value = 'end'
   }

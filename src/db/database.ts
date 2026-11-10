@@ -48,6 +48,7 @@ export interface Session {
   mode: 'alone' | 'assisted'
   startedAt: number
   endedAt?: number
+  activeMs?: number // Trainingszeit ohne Pausen (nicht indiziert, kein Schemawechsel nötig)
 }
 
 export interface ItemRow<P = unknown> {

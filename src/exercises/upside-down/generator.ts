@@ -1,11 +1,17 @@
 import { band, optionCount, pickDistractors } from '../levels'
-import { choice, labels, requireItem } from '../build'
+import { choice, labels, NoContentError, requireItem } from '../build'
+import { sample } from '../random'
 import type { ExerciseDefinition, Task } from '../types'
 import { upper, type WordPayload } from '../words'
 
-export interface UpsideDownData { text: string } // die UI dreht den Text um 180°
+export interface UpsideDownData {
+  text: string // die UI dreht den Text um 180°
+  lines?: string[] // Niveau 8–10: mehrere Sätze laut vorlesen
+}
 
-/** 1–3: kurze Wörter in Großbuchstaben, 4–7: längere Wörter gemischt, 8–10: kurze Sätze. */
+const PASSAGE_LINES = 4
+
+/** 1–3: kurze Wörter in Großbuchstaben, 4–7: längere Wörter gemischt, 8–10: mehrere Sätze laut vorlesen (mit Uhr). */
 export const upsideDown: ExerciseDefinition<UpsideDownData> = {
   key: 'upsideDown',
   label: 'Auf dem Kopf',
@@ -18,6 +24,20 @@ export const upsideDown: ExerciseDefinition<UpsideDownData> = {
   },
   generate(ctx): Task<UpsideDownData> {
     const { level, random } = ctx
+    if (band(level) === 'high') {
+      const pool = ctx.pool<WordPayload>('upsideDown', level)
+      if (pool.length < PASSAGE_LINES) throw new NoContentError('upsideDown', level)
+      const lines = sample(random, pool, PASSAGE_LINES).map((i) => i.payload.text)
+      return {
+        exercise: 'upsideDown', level, select: 'single',
+        prompt: 'Lesen Sie den Text auf dem Kopf laut vor.',
+        data: { text: lines.join(' '), lines },
+        options: [{ id: 'a', label: 'Fertig gelesen' }],
+        correctIds: ['a'],
+        hint: 'Beginnen Sie unten rechts und lesen Sie nach links.',
+        explanation: 'Gut gemacht! Auf dem Kopf lesen ist eine echte Herausforderung.',
+      }
+    }
     const item = requireItem<WordPayload>(ctx, 'upsideDown')
     const low = band(level) === 'low'
     const fmt = (s: string) => (low ? upper(s) : s)

@@ -49,9 +49,9 @@ describe('Planner', () => {
     }
   })
 
-  it('kommt bei 15 Minuten in alle 9 Übungen, wenn genug Zeit ist', () => {
+  it('kommt bei 15 Minuten in alle Übungen, wenn genug Zeit ist', () => {
     const ex = run(30 * MIN, 30_000).filter((s) => s.type === 'task' && !s.warmup).map((s) => s.type === 'task' && s.exercise)
-    expect(new Set(ex).size).toBe(9)
+    expect(new Set(ex).size).toBe(EXERCISE_IDS.length)
   })
 
   it('beendet nach Ablauf der Zeit erst den laufenden Block', () => {

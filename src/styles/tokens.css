@@ -56,6 +56,10 @@
   --stroop-orange: #a84e00;
   --stroop-purple: #7a3ba8;
   --stroop-brown: #7a4a20;
+  --stroop-yellow: #8a6d00;
+  --stroop-pink: #c2187a;
+  --stroop-gray: #5a5a5a;
+  --stroop-turquoise: #00797a;
 
   /* Profilsymbole (Icons, >= 3:1 auf Fläche) */
   --profile-flower: #a3366b;
@@ -93,6 +97,10 @@
   --stroop-orange: #ffaa5c;
   --stroop-purple: #cda6f0;
   --stroop-brown: #d9aa80;
+  --stroop-yellow: #ffe066;
+  --stroop-pink: #ff8fd0;
+  --stroop-gray: #bdbdbd;
+  --stroop-turquoise: #5fe0e0;
 
   --profile-flower: #f2a2c8;
   --profile-sun: #f3c54b;

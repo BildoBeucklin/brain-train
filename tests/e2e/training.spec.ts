@@ -21,7 +21,7 @@ test('eine 15-Minuten-Einheit läuft allein nur mit der Maus durch', async ({ pa
   await page.getByRole('switch').click()
   await page.screenshot({ path: `${dir}/01-start.png` })
 
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await expect(page.getByRole('heading', { name: 'Schön, dass Sie da sind, Maria.' })).toBeVisible()
   await expect(page.getByText('Heute üben wir etwa 15 Minuten.')).toBeVisible()
   await page.waitForTimeout(DEBOUNCE)
@@ -49,7 +49,7 @@ test('Pause und Leerlauf-Nachfrage', async ({ page }, info) => {
   await page.clock.install()
   await page.goto('/')
   await createProfile(page, 'Hans')
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await page.waitForTimeout(DEBOUNCE)
   await page.getByTestId('begin').click()
 

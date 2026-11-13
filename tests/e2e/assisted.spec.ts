@@ -22,7 +22,7 @@ test('dieselbe Einheit betreut: Begleitleiste mit allen Funktionen', async ({ pa
   await page.goto('/')
   await createProfile(page, 'Maria')
   await expect(page.getByRole('switch')).toHaveAttribute('data-state', 'checked') // neues Profil: betreut
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await page.waitForTimeout(DEBOUNCE)
   await page.getByTestId('begin').click()
   await page.waitForTimeout(DEBOUNCE)
@@ -115,7 +115,7 @@ test('Begleitung per 2 s Druck ein- und ausschalten; Pause, Taste P und Beenden'
   await page.goto('/')
   await createProfile(page, 'Hans')
   await page.getByRole('switch').click() // allein starten
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await page.waitForTimeout(DEBOUNCE)
   await page.getByTestId('begin').click()
   await expect(page.locator('.task-screen')).toBeVisible()

@@ -2,7 +2,7 @@ import Dexie, { type Table } from 'dexie'
 
 export type ExerciseId =
   | 'stroop' | 'upsideDown' | 'reverse' | 'proverbs'
-  | 'oddOneOut' | 'opposites' | 'wordFinding' | 'memory' | 'math'
+  | 'oddOneOut' | 'opposites' | 'wordFinding' | 'memory' | 'math' | 'mirror' | 'shopping'
 
 export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 

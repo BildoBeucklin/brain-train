@@ -50,14 +50,15 @@ export const useTrainingStore = defineStore('training', () => {
   const isMulti = computed(() => task.value?.select === 'multi')
   const done = computed(() => phase.value === 'correct' || phase.value === 'solution')
 
-  async function start(profileId: number, mode: 'alone' | 'assisted'): Promise<void> {
+  /** exercises: nur diese Übungen (z. B. eine gezielt gewählte); sonst alle (tägliches Training). */
+  async function start(profileId: number, mode: 'alone' | 'assisted', exercises: readonly ExerciseId[] = EXERCISE_IDS): Promise<void> {
     await profile.select(profileId)
     await settings.set('mode', mode)
     const now = Date.now()
     sessionId.value = await db.sessions.add({ profileId, mode, startedAt: now })
     planner = new Planner({
-      exercises: EXERCISE_IDS,
-      favorite: await profile.favorite(),
+      exercises,
+      favorite: exercises.length === 1 ? exercises[0] : await profile.favorite(),
       sessionMs: settings.values.sessionMinutes * 60_000,
       random: Math.random,
     })
@@ -186,7 +187,7 @@ export const useTrainingStore = defineStore('training', () => {
     const t = task.value!
     tries.value++
     if (isCorrect(t, selection)) return void finishTask(true)
-    if (tries.value === 1) {
+    if (tries.value === 1 && !t.singleTry) {
       // 1. Fehler: falsch gewählte ausgrauen, Hinweis zeigen
       const wrong = selection.filter((id) => !t.correctIds.includes(id))
       eliminated.value = [...eliminated.value, ...wrong]

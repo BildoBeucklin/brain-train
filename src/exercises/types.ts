@@ -9,6 +9,9 @@ export interface Option {
   swatch?: string
   /** Merken: Name des Lucide-Icons der Karte */
   icon?: string
+  /** Einkaufen: Schlüssel der Ware (Bild) und Anzahl */
+  image?: string
+  count?: number
 }
 
 export interface Task<D = unknown> {
@@ -23,6 +26,12 @@ export interface Task<D = unknown> {
   hint: string // nach dem 1. Fehler
   explanation?: string // nach dem 2. Fehler bzw. bei der Auflösung
   memorize?: { prompt: string; items: string[] } // Merken: erst einprägen, dann fragen
+  /** Die Prompt-Komponente übernimmt die Auswahl selbst (Einkaufen: Regal + Anzahl); keine Antwortflächen. */
+  custom?: boolean
+  /** Nur ein Versuch: ein Fehler zeigt sofort die Auflösung (Spiegelbilder). */
+  singleTry?: boolean
+  /** Beschriftung statt „Fertig“ bei Mehrfachauswahl */
+  submitLabel?: string
   open?: { prompt: string } // offene Aufgabe, nur betreut; Wertung durch die Begleitperson
   itemId?: number
 }

@@ -2,13 +2,14 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
-import { BookOpen, ChartColumn, LogOut, Settings2, Users } from 'lucide-vue-next'
+import { BookOpen, ChartColumn, LogOut, Printer, Settings2, Users } from 'lucide-vue-next'
 import BigButton from '@/components/BigButton.vue'
 import PinPad from '@/components/admin/PinPad.vue'
 import ProfilesTab from '@/components/admin/ProfilesTab.vue'
 import ContentTab from '@/components/admin/ContentTab.vue'
 import HistoryTab from '@/components/admin/HistoryTab.vue'
 import SettingsTab from '@/components/admin/SettingsTab.vue'
+import PrintTab from '@/components/admin/PrintTab.vue'
 import { useAdminStore } from '@/stores/admin'
 
 /** Verwaltung hinter PIN: Profile, Inhalte, Verlauf, Einstellungen. Hier darf gescrollt werden. */
@@ -20,6 +21,7 @@ const tabs = [
   { value: 'profile', label: 'Profile', icon: Users },
   { value: 'inhalte', label: 'Inhalte', icon: BookOpen },
   { value: 'verlauf', label: 'Verlauf', icon: ChartColumn },
+  { value: 'drucken', label: 'Drucken', icon: Printer },
   { value: 'einstellungen', label: 'Einstellungen', icon: Settings2 },
 ]
 const tab = ref(typeof route.query.tab === 'string' && tabs.some((t) => t.value === route.query.tab) ? route.query.tab : 'profile')
@@ -83,6 +85,7 @@ onBeforeUnmount(() => { window.removeEventListener('pointerdown', onActivity); a
         <TabsContent value="profile"><ProfilesTab /></TabsContent>
         <TabsContent value="inhalte"><ContentTab /></TabsContent>
         <TabsContent value="verlauf"><HistoryTab /></TabsContent>
+        <TabsContent value="drucken"><PrintTab /></TabsContent>
         <TabsContent value="einstellungen"><SettingsTab /></TabsContent>
       </div>
     </TabsRoot>

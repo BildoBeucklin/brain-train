@@ -5,6 +5,7 @@ import BigButton from '@/components/BigButton.vue'
 import { iconByName } from '@/components/icons'
 import { prompts } from '@/exercises/prompts'
 import { registry } from '@/exercises/registry'
+import { productImage } from '@/exercises/shopping/images'
 import { playSoftChime } from '@/composables/useSound'
 import { useSettingsStore } from '@/stores/settings'
 import { useTrainingStore } from '@/stores/training'
@@ -63,13 +64,15 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
       <span>Bitte antworten Sie mündlich. Ihre Begleitung hört zu.</span>
     </div>
 
-    <AnswerGrid v-else-if="!memorizing" :count="task.options.length" class="answers">
+    <AnswerGrid v-else-if="!memorizing && !task.custom" :count="task.options.length" class="answers">
       <AnswerButton
         v-for="o in task.options"
         :key="o.id"
         :label="o.label"
         :swatch="o.swatch"
         :icon="iconByName(o.icon)"
+        :image="productImage(o.image)"
+        :count="o.count"
         :multi="task.select === 'multi'"
         :state="stateOf(o.id)"
         :data-testid="`answer-${o.id}`"
@@ -93,7 +96,7 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
         />
         <BigButton
           v-else-if="task.select === 'multi' && !training.done"
-          label="Fertig"
+          :label="task.submitLabel ?? 'Fertig'"
           :icon="Check"
           variant="primary"
           size="large"

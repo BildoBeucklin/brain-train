@@ -10,7 +10,7 @@ import { PAYLOAD_SCHEMAS } from '@/exercises/schemas'
 export const BACKUP_FORMAT = 'gedaechtnisstunde'
 export const BACKUP_VERSION = 1
 
-const exerciseId = z.enum(['stroop', 'upsideDown', 'reverse', 'proverbs', 'oddOneOut', 'opposites', 'wordFinding', 'memory', 'math'])
+const exerciseId = z.enum(['stroop', 'upsideDown', 'reverse', 'proverbs', 'oddOneOut', 'opposites', 'wordFinding', 'memory', 'math', 'mirror', 'shopping'])
 const level = z.number().int().min(1).max(10)
 
 const itemSchema = z.object({

@@ -29,7 +29,7 @@ const wrongId = (t: ReturnType<typeof useTrainingStore>) => t.task!.options.find
 
 /** Bis zu einer Einzelauswahl-Aufgabe weiterspringen. */
 function toSingleTask(t: ReturnType<typeof useTrainingStore>) {
-  for (let i = 0; i < 100 && (t.task?.select !== 'single' || t.task.memorize); i++) {
+  for (let i = 0; i < 100 && (t.task?.select !== 'single' || t.task.memorize || t.task.options.length < 2); i++) {
     if (t.stage === 'break') t.proceed()
     else {
       if (t.phase === 'memorize') t.memorized()
@@ -74,6 +74,7 @@ describe('Trainingsablauf', () => {
       if (t.stage === 'break') { t.proceed(); continue }
       if (t.phase === 'memorize') t.memorized()
       if (t.task!.select === 'multi') { t.answer(t.task!.correctIds[0]!); t.submit(); t.submit() }
+      if (!t.done && t.task!.options.length < 2) t.answer(t.task!.correctIds[0]!)
       if (!t.done) { t.answer(wrongId(t)); if (!t.done) t.answer(wrongId(t)) }
       t.proceed()
     }

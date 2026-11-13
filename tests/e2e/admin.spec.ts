@@ -119,7 +119,7 @@ test('Einstellungen wirken: Einheitslänge, dunkles Design, Sicherungs-Erinnerun
   await leaveAdmin(page)
   await page.getByRole('button', { name: 'Hans' }).click()
   await page.waitForTimeout(DEBOUNCE)
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await expect(page.getByText('Heute üben wir etwa 10 Minuten.')).toBeVisible()
   await page.screenshot({ path: `test-results/screens/${info.project.name}/14-greeting-dark.png` })
 })
@@ -129,7 +129,7 @@ test('Verlauf zeigt Minuten und Niveaus nach einer Einheit, mit Hinweis „kein 
   await page.goto('/')
   await createProfile(page, 'Maria')
   await page.getByRole('switch').click() // allein
-  await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await page.getByRole('button', { name: 'Tägliches Training' }).click()
   await page.waitForTimeout(DEBOUNCE)
   await page.getByTestId('begin').click()
   // 4 Aufgaben à 90 s (unter der Leerlauf-Grenze von 2 min) = 6 min

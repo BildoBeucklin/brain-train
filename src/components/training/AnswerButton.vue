@@ -16,6 +16,8 @@ const props = defineProps<{
   multi?: boolean
   swatch?: string // CSS-Variable, Farbübung
   icon?: Component // Merken-Karten
+  image?: string // Einkaufen: Bild-URL
+  count?: number // Einkaufen: so oft wird das Bild gezeigt
 }>()
 const emit = defineEmits<{ press: [] }>()
 
@@ -34,7 +36,7 @@ function onClick() {
   <button
     type="button"
     class="answer"
-    :class="[`is-${state}`, { 'with-icon': !!icon }]"
+    :class="[`is-${state}`, { 'with-icon': !!icon || !!image }]"
     :disabled="!clickable"
     :aria-pressed="multi ? state === 'selected' : undefined"
     @click="onClick"
@@ -45,6 +47,9 @@ function onClick() {
     </span>
     <span v-if="swatch" class="swatch" :style="{ background: `var(${swatch})` }" aria-hidden="true" />
     <component :is="icon" v-if="icon" class="card-icon" :size="44" :stroke-width="1.75" aria-hidden="true" />
+    <span v-if="image" class="pics" aria-hidden="true">
+      <img v-for="n in Math.min(count ?? 1, 4)" :key="n" :src="image" alt="" />
+    </span>
     <span class="text">
       <span class="label">{{ label }}</span>
       <span v-if="statusText" class="status">
@@ -126,4 +131,8 @@ function onClick() {
   border: 2px solid var(--color-control-border);
 }
 .card-icon { color: var(--color-accent-text); }
+.pics { display: flex; flex: none; }
+.pics img { width: 56px; height: 56px; object-fit: contain; }
+.pics img + img { margin-left: -20px; }
+.is-eliminated .pics { opacity: 0.45; }
 </style>

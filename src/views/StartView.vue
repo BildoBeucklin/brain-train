@@ -2,9 +2,12 @@
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
-import { HandHelping, Play, Settings2 } from 'lucide-vue-next'
+import { ArrowLeft, Dices, HandHelping, LayoutGrid, Play, Settings2 } from 'lucide-vue-next'
 import BigButton from '@/components/BigButton.vue'
 import ProfileTile from '@/components/profile/ProfileTile.vue'
+import { iconByName } from '@/components/icons'
+import type { ExerciseId } from '@/db/database'
+import { EXERCISE_IDS, registry } from '@/exercises/registry'
 import { useProfileStore } from '@/stores/profile'
 import { useSettingsStore } from '@/stores/settings'
 import { useTrainingStore } from '@/stores/training'
@@ -27,10 +30,14 @@ watch(selectedId, async (id) => {
 
 const tiles = computed(() => profile.profiles.slice(0, MAX_TILES))
 
-async function go() {
+/** 'profiles': Profil wählen; 'exercises': eine bestimmte Übung wählen. */
+const view = ref<'profiles' | 'exercises'>('profiles')
+
+/** Ohne Angabe: tägliches Training mit allen Übungen im Wechsel. */
+async function go(exercise?: ExerciseId) {
   if (selectedId.value == null || starting.value) return
   starting.value = true
-  await training.start(selectedId.value, assisted.value ? 'assisted' : 'alone')
+  await training.start(selectedId.value, assisted.value ? 'assisted' : 'alone', exercise ? [exercise] : undefined)
   await router.push('/training')
 }
 </script>
@@ -38,14 +45,30 @@ async function go() {
 <template>
   <main class="start">
     <header class="head">
-      <h1>Guten Tag! Wer trainiert heute?</h1>
+      <h1 v-if="view === 'profiles'">Guten Tag! Wer trainiert heute?</h1>
+      <h1 v-else>Welche Übung möchten Sie machen?</h1>
       <!-- für Begleitpersonen; bewusst unauffällig -->
       <RouterLink to="/verwaltung" class="admin-link" data-testid="to-admin">
         <Settings2 :size="22" aria-hidden="true" /><span>Verwaltung</span>
       </RouterLink>
     </header>
 
-    <div class="tiles">
+    <div v-if="view === 'exercises'" class="exercises" data-testid="exercise-picker">
+      <button
+        v-for="ex in EXERCISE_IDS"
+        :key="ex"
+        type="button"
+        class="exercise"
+        :disabled="starting"
+        :data-testid="`pick-${ex}`"
+        @click="go(ex)"
+      >
+        <component :is="iconByName(registry[ex].icon)" :size="48" aria-hidden="true" />
+        <span>{{ registry[ex].label }}</span>
+      </button>
+    </div>
+
+    <div v-else class="tiles">
       <ProfileTile
         v-for="p in tiles"
         :key="p.id"
@@ -55,7 +78,7 @@ async function go() {
         @press="selectedId = p.id!"
       />
     </div>
-    <p v-if="tiles.length === 0" class="no-profiles" data-testid="no-profiles">
+    <p v-if="view === 'profiles' && tiles.length === 0" class="no-profiles" data-testid="no-profiles">
       Es gibt noch kein Profil. Eine Begleitperson legt es unter „Verwaltung“ an.
     </p>
 
@@ -68,14 +91,27 @@ async function go() {
         <span>Mit Begleitung</span>
       </label>
 
-      <BigButton
-        label="Los geht’s"
-        :icon="Play"
-        variant="primary"
-        size="large"
-        :disabled="selectedId == null || starting"
-        @press="go"
-      />
+      <div v-if="view === 'profiles'" class="choices">
+        <BigButton label="Spiele (bald)" :icon="Dices" disabled data-testid="games" />
+        <BigButton
+          label="Übung auswählen"
+          :icon="LayoutGrid"
+          size="large"
+          :disabled="selectedId == null || starting"
+          data-testid="choose-exercise"
+          @press="view = 'exercises'"
+        />
+        <BigButton
+          label="Tägliches Training"
+          :icon="Play"
+          variant="primary"
+          size="large"
+          :disabled="selectedId == null || starting"
+          data-testid="daily"
+          @press="go()"
+        />
+      </div>
+      <BigButton v-else label="Zurück" :icon="ArrowLeft" size="large" data-testid="back-to-profiles" @press="view = 'profiles'" />
     </div>
 
   </main>
@@ -108,6 +144,25 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
   align-content: center;
   min-height: 0;
 }
+.choices { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; }
+.exercises {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-2);
+  align-content: center;
+  min-height: 0;
+  overflow-y: auto;
+}
+.exercise {
+  display: flex; align-items: center; gap: var(--space-2);
+  min-height: 128px; min-width: 0; padding: var(--space-3);
+  border: 3px solid var(--color-control-border); border-radius: var(--radius);
+  background: var(--color-surface); color: var(--color-text);
+  font-size: var(--text-answer); font-weight: 700; text-align: left; cursor: pointer;
+  line-height: 1.2; overflow-wrap: break-word; hyphens: auto;
+}
+.exercise:hover:not(:disabled) { background: var(--color-accent-soft); border-color: var(--color-accent); }
+.exercise :deep(svg) { color: var(--color-accent-text); flex: none; }
 .bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
 .toggle {
   display: inline-flex;

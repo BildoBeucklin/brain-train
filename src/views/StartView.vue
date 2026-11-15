@@ -114,6 +114,11 @@ async function go(exercise?: ExerciseId) {
       <BigButton v-else label="Zurück" :icon="ArrowLeft" size="large" data-testid="back-to-profiles" @press="view = 'profiles'" />
     </div>
 
+    <footer class="credits" data-testid="credits">
+      Inspiriert von den Übungen von Univ.-Prof. Wolf-Dieter Oswald, dem Initiator der SIMA-Studien und des SimA®-Schulungsprogramms.
+      In Kooperation mit dem Cohaus-Vendt-Stift, gefördert von der Sozialstiftung NRW.
+      Entwickelt von RIS – Roßmann IT Solutions.
+    </footer>
   </main>
 </template>
 
@@ -121,7 +126,7 @@ async function go(exercise?: ExerciseId) {
 .start {
   height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto;
   gap: var(--space-5);
   padding: var(--space-6) var(--space-8);
   max-width: 1400px;
@@ -163,6 +168,7 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
 }
 .exercise:hover:not(:disabled) { background: var(--color-accent-soft); border-color: var(--color-accent); }
 .exercise :deep(svg) { color: var(--color-accent-text); flex: none; }
+.credits { margin-top: calc(-1 * var(--space-3)); font-size: var(--text-min); color: var(--color-text-muted); text-align: center; line-height: 1.4; }
 .bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
 .toggle {
   display: inline-flex;

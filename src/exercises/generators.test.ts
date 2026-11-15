@@ -198,6 +198,8 @@ describe('Inhaltsübungen', () => {
     expect(low.data.text).toBe(low.data.text.toUpperCase())
     const high = generate('upsideDown', 9, 1) as Task<{ text: string }>
     expect(high.data.text).toContain(' ')
+    const lines = (n: Level) => (generate('upsideDown', n, 1) as Task<{ text: string; lines: string[] }>).data.lines.length
+    expect(lines(10)).toBeGreaterThan(lines(8))
   })
 
   it('Merken: leicht Ja/Nein, mittel 3–4 aus 6, schwer 5–7 aus 9', () => {

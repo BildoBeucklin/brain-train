@@ -18,16 +18,24 @@ jobs:
   macos:
     name: macOS (Universal .dmg)
     runs-on: macos-latest
-    env:
-      # Optional: Signieren + Notarisieren. Ohne diese Secrets entsteht ein unsigniertes .dmg
-      # (startet nach Rechtsklick → „Öffnen“).
-      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
     steps:
+      # Optional: Signieren + Notarisieren. Ohne diese Secrets entsteht ein unsigniertes .dmg
+      # (startet nach Rechtsklick → „Öffnen“). Leere Variablen würden Tauri zum Signieren verleiten,
+      # daher nur gesetzte Secrets weitergeben.
+      - name: Signatur-Secrets übernehmen (falls vorhanden)
+        env:
+          S_APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          S_APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          S_APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          S_APPLE_ID: ${{ secrets.APPLE_ID }}
+          S_APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          S_APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$S_APPLE_CERTIFICATE" ]; then echo "Keine Signatur – unsigniertes .dmg"; exit 0; fi
+          for v in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+            val="S_$v"; [ -n "${!val}" ] && echo "$v=${!val}" >> "$GITHUB_ENV"
+          done
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -57,14 +65,25 @@ jobs:
   ios:
     name: iOS (.ipa)
     runs-on: macos-latest
-    env:
+    steps:
       # Optional. Mit allen vier Secrets entsteht ein signiertes .ipa (Ad-hoc, für registrierte Geräte);
       # ohne sie ein unsigniertes .ipa, das vor der Installation noch signiert werden muss.
-      APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
-      IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
-      IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-      IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
-    steps:
+      - name: Signatur-Secrets übernehmen (falls vorhanden)
+        env:
+          S_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          S_CERT: ${{ secrets.IOS_CERTIFICATE }}
+          S_CERT_PW: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          S_PROFILE: ${{ secrets.IOS_MOBILE_PROVISION }}
+        run: |
+          if [ -n "$S_TEAM" ] && [ -n "$S_CERT" ] && [ -n "$S_PROFILE" ]; then
+            { echo "SIGNED=true"; echo "APPLE_DEVELOPMENT_TEAM=$S_TEAM"; echo "IOS_CERTIFICATE=$S_CERT"
+              echo "IOS_CERTIFICATE_PASSWORD=$S_CERT_PW"; echo "IOS_MOBILE_PROVISION=$S_PROFILE"; } >> "$GITHUB_ENV"
+          else
+            # tauri ios init verlangt eine Team-ID; für den unsignierten Build genügt ein Platzhalter.
+            { echo "SIGNED=false"; echo "APPLE_DEVELOPMENT_TEAM=0000000000"; } >> "$GITHUB_ENV"
+            echo "Keine Signatur – unsigniertes .ipa"
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -91,13 +110,13 @@ jobs:
           fi
 
       - name: Build (signiert)
-        if: env.APPLE_DEVELOPMENT_TEAM != '' && env.IOS_CERTIFICATE != '' && env.IOS_MOBILE_PROVISION != ''
+        if: env.SIGNED == 'true'
         run: |
           npx tauri ios build --ci --export-method release-testing
           mkdir -p out && cp src-tauri/gen/apple/build/arm64/*.ipa out/
 
       - name: Build (unsigniert)
-        if: env.APPLE_DEVELOPMENT_TEAM == '' || env.IOS_CERTIFICATE == '' || env.IOS_MOBILE_PROVISION == ''
+        if: env.SIGNED != 'true'
         run: |
           cd src-tauri/gen/apple
           project=$(ls -d *.xcodeproj | head -1)

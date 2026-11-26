@@ -99,7 +99,7 @@ describe('Trainingsablauf', () => {
     await vi.waitFor(async () => expect((await db.attempts.orderBy('id').last())?.tries).toBe(2))
   })
 
-  it('nach 3 sauberen Treffern derselben Übung steigt das Niveau', async () => {
+  it('nach 3 sauberen Treffern derselben Übung bleibt das Niveau gleich', async () => {
     const { training: t, profile } = await setup()
     const ex = t.task!.exercise
     const before = profile.levelOf(ex)
@@ -109,7 +109,7 @@ describe('Trainingsablauf', () => {
       else t.answer(t.task!.correctIds[0]!)
       t.proceed()
     }
-    expect(profile.levelOf(ex)).toBe(before + 1)
+    expect(profile.levelOf(ex)).toBe(before)
   })
 
   it('Pause hält die Zeit an; Ende nach Einheitslänge mit Abschlussbildschirm', async () => {

@@ -51,16 +51,13 @@
   --color-focus-ring: #18231f;
 
   /* Farbübung */
-  --stroop-red: #c42525;
-  --stroop-blue: #1b4fb8;
-  --stroop-green: #2a7a33;
-  --stroop-orange: #a84e00;
-  --stroop-purple: #7a3ba8;
-  --stroop-brown: #7a4a20;
-  --stroop-yellow: #8a6d00;
-  --stroop-pink: #c2187a;
-  --stroop-gray: #5a5a5a;
-  --stroop-turquoise: #00797a;
+  --stroop-board: #111318; /* dunkle Tafel in allen Designs, damit die Farben echt aussehen */
+  --stroop-red: #ff4040;
+  --stroop-yellow: #ffd800;
+  --stroop-blue: #4d8dff;
+  --stroop-green: #2fd05a;
+  --stroop-purple: #c47cff;
+  --stroop-orange: #ff9a1f;
 
   /* Profilsymbole (Icons, >= 3:1 auf Fläche) */
   --profile-flower: #a3366b;
@@ -93,17 +90,6 @@
   --color-focus: #00e5ff;
   --color-focus-ring: #000000;
 
-  --stroop-red: #ff8a80;
-  --stroop-blue: #8db1ff;
-  --stroop-green: #73d48f;
-  --stroop-orange: #ffaa5c;
-  --stroop-purple: #cda6f0;
-  --stroop-brown: #d9aa80;
-  --stroop-yellow: #ffe066;
-  --stroop-pink: #ff8fd0;
-  --stroop-gray: #bdbdbd;
-  --stroop-turquoise: #5fe0e0;
-
   --profile-flower: #f2a2c8;
   --profile-sun: #f3c54b;
   --profile-bird: #8db1ff;
@@ -131,17 +117,6 @@
   --color-neutral-bg: #2a3431;
   --color-neutral-text: #bac7c2;
   --color-focus-ring: #000000;
-
-  --stroop-red: #ff8a80;
-  --stroop-blue: #8db1ff;
-  --stroop-green: #73d48f;
-  --stroop-orange: #ffaa5c;
-  --stroop-purple: #cda6f0;
-  --stroop-brown: #d9aa80;
-  --stroop-yellow: #ffe066;
-  --stroop-pink: #ff8fd0;
-  --stroop-gray: #bdbdbd;
-  --stroop-turquoise: #5fe0e0;
 
   --profile-flower: #f2a2c8;
   --profile-sun: #f3c54b;

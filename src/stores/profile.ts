@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref, shallowRef } from 'vue'
-import { db, type ExerciseId, type Level, type Profile, type Skill } from '@/db/database'
-import { effectiveLevel, initialSkill, nextLevel, type Result } from '@/exercises/adaptive'
+import { db, START_LEVEL, type ExerciseId, type Level, type Profile, type Skill } from '@/db/database'
 import { EXERCISE_IDS } from '@/exercises/registry'
 
 export type ProfileSymbol = 'flower' | 'sun' | 'bird' | 'cat' | 'anchor' | 'coffee'
@@ -37,25 +36,17 @@ export const useProfileStore = defineStore('profile', () => {
     await load()
   }
 
-  /** Wählt ein Profil und lädt die Niveaus; fehlende Übungen starten auf Niveau 2, nach langer Pause eins tiefer. */
+  /** Wählt ein Profil und lädt die Niveaus; fehlende Übungen starten auf Niveau 2. */
   async function select(id: number, now = Date.now()): Promise<void> {
     const stored = await db.skills.where('profileId').equals(id).toArray()
     const map = new Map(stored.map((s) => [s.exercise, s]))
-    const changed: Skill[] = []
-    for (const ex of EXERCISE_IDS) {
-      const s = map.get(ex)
-      if (!s) {
-        const fresh = initialSkill(id, ex, now)
-        map.set(ex, fresh); changed.push(fresh)
-      } else {
-        const level = effectiveLevel(s, now)
-        if (level !== s.level) {
-          const lowered = { ...s, level, streak: 0, lastAt: now }
-          map.set(ex, lowered); changed.push(lowered)
-        }
-      }
+    const fresh: Skill[] = []
+    for (const exercise of EXERCISE_IDS) {
+      if (map.has(exercise)) continue
+      const s: Skill = { profileId: id, exercise, level: START_LEVEL, streak: 0, lastAt: now }
+      map.set(exercise, s); fresh.push(s)
     }
-    if (changed.length) await db.skills.bulkPut(changed)
+    if (fresh.length) await db.skills.bulkPut(fresh)
     skills.value = map
     currentId.value = id
   }
@@ -64,16 +55,16 @@ export const useProfileStore = defineStore('profile', () => {
     return skills.value.get(exercise)?.level ?? 2
   }
 
-  async function applyResult(exercise: ExerciseId, result: Result, now = Date.now()): Promise<Skill> {
+  /** Merkt sich, wann die Übung zuletzt geübt wurde. Das Niveau bleibt unverändert. */
+  async function markPracticed(exercise: ExerciseId, now = Date.now()): Promise<void> {
     const s = skills.value.get(exercise)
     if (!s) throw new Error('Kein Profil gewählt')
-    const updated: Skill = { ...s, ...nextLevel(s, result), lastAt: now }
+    const updated: Skill = { ...s, lastAt: now }
     skills.value.set(exercise, updated)
     await db.skills.put(updated)
-    return updated
   }
 
-  /** Begleitperson: Niveau direkt setzen bzw. festhalten (die adaptive Regel pausiert dann). */
+  /** Begleitperson: Niveau direkt setzen bzw. festhalten. */
   async function setLevel(exercise: ExerciseId, level: Level, locked?: boolean): Promise<Skill> {
     const s = skills.value.get(exercise)
     if (!s) throw new Error('Kein Profil gewählt')
@@ -102,5 +93,5 @@ export const useProfileStore = defineStore('profile', () => {
     return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
   }
 
-  return { profiles, current, currentId, skills, load, create, remove, select, levelOf, applyResult, favorite, setLevel, isLocked, hasSessions }
+  return { profiles, current, currentId, skills, load, create, remove, select, levelOf, markPracticed, favorite, setLevel, isLocked, hasSessions }
 })

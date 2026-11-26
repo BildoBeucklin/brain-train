@@ -1,7 +1,7 @@
 import { band } from '../levels'
-import { pick, shuffle } from '../random'
+import { pick } from '../random'
 import type { ExerciseDefinition, Task } from '../types'
-import { STROOP_COLORS, colorsConfusable, colorsDistinct, type StroopColor } from './colors'
+import { STROOP_COLORS, type StroopColor } from './colors'
 
 export interface StroopCell {
   word: string // angezeigtes Farbwort
@@ -17,28 +17,19 @@ export interface StroopData {
 /** Gittergröße je Stufe. */
 const GRID = { low: { cols: 3, rows: 3 }, mid: { cols: 4, rows: 4 }, high: { cols: 5, rows: 5 } } as const
 
-/** Anzahl Farben: Niveau 1 → 2 Farben, Niveau 10 → 7 Farben. */
-export const colorCount = (level: number) => Math.min(7, 2 + Math.floor((level - 1) * 5 / 9))
+/** Reihenfolge, in der Farben dazukommen: erst Rot, Gelb, Blau; ab Niveau 8 Grün, Lila, Orange. */
+export const STRONG_COLORS = ['red', 'yellow', 'blue', 'green', 'purple', 'orange'] as const
 
-/**
- * Wählt n verschiedene Farben. Zuerst solche, die auch bei Rot-Grün-Schwäche unterscheidbar sind;
- * reicht das nicht (ab etwa 4 Farben), werden Farben ergänzt, die bei normalem Sehen klar verschieden sind.
- */
-function distinctColors(random: () => number, n: number): StroopColor[] {
-  const order = shuffle(random, [...STROOP_COLORS])
-  const chosen: StroopColor[] = []
-  for (const c of order) {
-    if (chosen.length < n && chosen.every((o) => !colorsConfusable(c, o))) chosen.push(c)
-  }
-  for (const c of order) {
-    if (chosen.length < n && !chosen.includes(c) && chosen.every((o) => colorsDistinct(c, o))) chosen.push(c)
-  }
-  return chosen
+/** Anzahl Farben: Niveau 1–7 → 3, Niveau 8 → 4, 9 → 5, 10 → 6. */
+export const colorCount = (level: number) => (level >= 8 ? level - 4 : 3)
+
+function strongColors(n: number): StroopColor[] {
+  return STRONG_COLORS.slice(0, n).map((id) => STROOP_COLORS.find((c) => c.id === id)!)
 }
 
 /**
  * Farb-Wort-Übung: Ein Gitter aus Farbwörtern. Laut vorgelesen wird die Schriftfarbe, nicht das Wort.
- * Farbanzahl steigt von 2 (Niveau 1) bis 7 (Niveau 10).
+ * Rot, Gelb, Blau; ab Niveau 8 kommen Grün, Lila und Orange dazu.
  * Niveau 1–3: 3×3, Wort und Farbe passen meist zusammen.
  * Niveau 4–7: 4×4, Wort und Farbe passen nie.
  * Niveau 8–10: 5×5, Wort und Farbe passen nie, keine zwei gleichen Farben nebeneinander.
@@ -56,7 +47,7 @@ export const stroop: ExerciseDefinition<StroopData> = {
   generate({ level, random }): Task<StroopData> {
     const b = band(level)
     const { cols, rows } = GRID[b]
-    const palette = distinctColors(random, colorCount(level))
+    const palette = strongColors(colorCount(level))
     const cells: StroopCell[] = []
     for (let i = 0; i < cols * rows; i++) {
       const left = i % cols > 0 ? cells[i - 1]!.ink : undefined

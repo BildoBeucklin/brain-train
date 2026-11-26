@@ -205,7 +205,7 @@ export const useTrainingStore = defineStore('training', () => {
     const result = { correct, tries: (tries.value >= 2 ? 2 : 1) as 1 | 2, hint: usedHint.value }
     const now = Date.now()
     if (sessionId.value == null || profile.currentId == null) return // Vorschau: nichts speichern
-    void profile.applyResult(t.exercise, result, now)
+    void profile.markPracticed(t.exercise, now)
     {
       void db.attempts.add({
         sessionId: sessionId.value, profileId: profile.currentId, exercise: t.exercise, level: t.level,

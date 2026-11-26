@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Check, X } from 'lucide-vue-next'
-import { iconByName } from '@/components/icons'
 import { useTrainingStore } from '@/stores/training'
 import type { Task } from '../types'
 import { MIRROR_PICTURES, type MirrorData } from './generator'
+import { SILHOUETTES } from './silhouettes'
 
 const pictureName = (icon: string) => MIRROR_PICTURES.find((p) => p.icon === icon)?.name ?? icon
 const RESULT = { plain: '', picked: '', found: ', gefunden', wrong: ', war gespiegelt', missed: ', übersehen' } as const
@@ -35,7 +35,7 @@ function tap(i: number) {
   <div class="mirror">
     <div class="box" :style="{ '--cols': task.data.cols }" role="list" aria-label="Vorlage">
       <span v-for="(icon, i) in task.data.left" :key="i" class="cell" role="listitem">
-        <component :is="iconByName(icon)" :stroke-width="1.75" aria-hidden="true" />
+        <span class="pic" v-html="SILHOUETTES[icon]" />
         <span class="sr-only">{{ pictureName(icon) }}</span>
       </span>
     </div>
@@ -55,7 +55,7 @@ function tap(i: number) {
         :data-testid="`mirror-${i}`"
         @click="tap(i)"
       >
-        <component :is="iconByName(p.icon)" :class="{ flipped: !p.plain }" :stroke-width="1.75" aria-hidden="true" />
+        <span class="pic" :class="{ flipped: !p.plain }" v-html="SILHOUETTES[p.icon]" />
         <Check v-if="state(i) === 'found'" class="mark" :size="24" :stroke-width="3" aria-hidden="true" />
         <X v-else-if="state(i) === 'wrong'" class="mark" :size="24" :stroke-width="3" aria-hidden="true" />
       </button>
@@ -100,7 +100,8 @@ function tap(i: number) {
   aspect-ratio: 1;
   color: var(--color-text);
 }
-.cell :deep(svg:not(.mark)) { width: 70%; height: 70%; }
+.pic { display: grid; place-items: center; width: 75%; height: 75%; }
+.pic :deep(svg) { width: 100%; height: 100%; }
 .flipped { transform: scaleX(-1); }
 .mirror-line { width: 4px; align-self: stretch; border-radius: 2px; background: var(--color-line); }
 

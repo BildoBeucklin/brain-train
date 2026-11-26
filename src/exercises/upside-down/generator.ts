@@ -19,11 +19,18 @@ const NONSENSE_SHORT = [
   'Schuh', 'tanzen', 'zwölf', 'Stuhl', 'süß', 'Fluss', 'kalt', 'Brücke', 'sieben', 'Löffel', 'morgens', 'Vogel',
   'alt', 'Kerze', 'spät', 'Wiese', 'hoch', 'Zucker', 'gelb', 'Bahn', 'trinken', 'Hut', 'klein', 'Insel', 'oft',
   'Pinsel', 'still', 'Wagen', 'rot', 'Feder', 'lachen', 'Glocke', 'dort', 'Butter', 'eckig', 'Nebel', 'drei',
+  'Tasse', 'fröhlich', 'Kissen', 'schwimmen', 'Birne', 'leer', 'Zaun', 'gestern', 'Ente', 'hell', 'Schrank', 'malen',
+  'Kirsche', 'dunkel', 'Wolle', 'zwischen', 'Teller', 'weit', 'Rabe', 'kochen', 'Sessel', 'nass', 'Brille', 'fünf',
+  'Muschel', 'bald', 'Kanne', 'schlafen', 'Mantel', 'eng', 'Tanne', 'pfeifen', 'Honig', 'rau', 'Schiff', 'heute',
 ]
 const NONSENSE_LONG = [
   'Sonnenblumenfeld', 'Gartenzwerg', 'Fruchtsaft', 'Leuchtturm', 'Kirschkuchen', 'Fahrkartenschalter',
   'unregelmäßig', 'Regenschirm', 'Schmetterling', 'Briefträgerin', 'Strickjacke', 'Marmeladenglas',
   'Wochenmarkt', 'Kaffeekanne', 'Streuselschnecke', 'Federballspiel', 'außerordentlich', 'Zahnbürste',
+  'Wäscheklammer', 'Pfannkuchen', 'Gänseblümchen', 'Kartoffelpuffer', 'Bahnhofsuhr', 'Schaukelstuhl',
+  'Weihnachtsbaum', 'Hühnersuppe', 'Blumenstrauß', 'Kirschbaum', 'Nähmaschine', 'Taschenlampe',
+  'Schokoladentorte', 'Sonnenuntergang', 'Fensterbank', 'Gartenschlauch', 'Postkutsche', 'Erdbeerkuchen',
+  'Apfelstrudel', 'Kaffeemühle', 'Holzeisenbahn', 'Wanderschuhe', 'Eierlikör', 'Briefkasten',
 ]
 /** Zeilen und Wörter je Zeile auf Niveau 8, 9, 10 */
 const PASSAGE = { 8: [4, 5], 9: [6, 6], 10: [8, 7] } as Record<number, [number, number]>

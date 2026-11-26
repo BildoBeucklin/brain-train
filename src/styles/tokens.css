@@ -1,0 +1,155 @@
+/* Design-Tokens – siehe docs/GESTALTUNG.md. Kontraste prüft tests/unit/tokens.test.ts. */
+:root {
+  --font-sans: 'Atkinson Hyperlegible', system-ui, sans-serif;
+
+  /* Schrift; --font-scale später aus settings.fontScale (4 Stufen) */
+  --font-scale: 1;
+  --vh: 8px; /* wird beim Start auf 1 % der Fensterhöhe gesetzt (stores/settings.ts) */
+  --text-min: calc(1.25rem * var(--font-scale)); /* 20 px, nie kleiner (Begleitleiste) */
+  --text-help: calc(1.5rem * var(--font-scale)); /* 24 px Hilfetexte */
+  --text-answer: calc(2rem * var(--font-scale)); /* 32 px Antworten */
+  --text-task: calc(2.5rem * var(--font-scale)); /* 40 px Aufgabentext */
+  --text-stage: calc(4.5rem * var(--font-scale)); /* großes Aufgabenwort, ≥ 56 px fett */
+
+  /* Abstände in 8er-Schritten */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-7: 56px;
+  --space-8: 64px;
+
+  --radius: 16px;
+  --answer-min-height: 96px;
+  --answer-min-width: 280px;
+  --answer-gap: 24px;
+  --companion-height: 72px;
+
+  --focus-width: 4px;
+  --focus-ring-width: 2px;
+  --color-focus: #f3c54b;
+  --focus-shadow: 0 0 0 var(--focus-width) var(--color-focus),
+    0 0 0 calc(var(--focus-width) + var(--focus-ring-width)) var(--color-focus-ring);
+
+  /* Hell */
+  --color-bg: #ecf1ef;
+  --color-surface: #ffffff;
+  --color-text: #18231f;
+  --color-text-muted: #404d49;
+  --color-line: #ccd8d3;
+  --color-control-border: #6f7f79;
+  --color-accent: #1e5e55;
+  --color-on-accent: #ffffff;
+  --color-accent-text: #1a5249;
+  --color-accent-soft: #d6e8e3;
+  --color-success-border: #2a7a33;
+  --color-success-bg: #e5f4e4;
+  --color-neutral-bg: #e4e8e6;
+  --color-neutral-text: #404d49;
+  --color-focus-ring: #18231f;
+
+  /* Farbübung */
+  --stroop-red: #c42525;
+  --stroop-blue: #1b4fb8;
+  --stroop-green: #2a7a33;
+  --stroop-orange: #a84e00;
+  --stroop-purple: #7a3ba8;
+  --stroop-brown: #7a4a20;
+  --stroop-yellow: #8a6d00;
+  --stroop-pink: #c2187a;
+  --stroop-gray: #5a5a5a;
+  --stroop-turquoise: #00797a;
+
+  /* Profilsymbole (Icons, >= 3:1 auf Fläche) */
+  --profile-flower: #a3366b;
+  --profile-sun: #8a5a00;
+  --profile-bird: #1b4fb8;
+  --profile-cat: #6b4a2b;
+  --profile-anchor: #1e5e55;
+  --profile-coffee: #7a3ba8;
+
+  /* Verlauf-Diagramm (mit dataviz-Validator geprüft: CVD, Kontrast >= 3:1) */
+  --series-alone: #2a78d6;
+  --series-assisted: #eb6834;
+}
+
+:root[data-theme='contrast'] {
+  --color-bg: #000000;
+  --color-surface: #000000;
+  --color-text: #ffffff;
+  --color-text-muted: #f0f0f0;
+  --color-line: #ffffff;
+  --color-control-border: #ffffff;
+  --color-accent: #ffe500;
+  --color-on-accent: #000000;
+  --color-accent-text: #ffe500;
+  --color-accent-soft: #2e2900;
+  --color-success-border: #4dff88;
+  --color-success-bg: #00290f;
+  --color-neutral-bg: #333333;
+  --color-neutral-text: #ffffff;
+  --color-focus: #00e5ff;
+  --color-focus-ring: #000000;
+
+  --stroop-red: #ff8a80;
+  --stroop-blue: #8db1ff;
+  --stroop-green: #73d48f;
+  --stroop-orange: #ffaa5c;
+  --stroop-purple: #cda6f0;
+  --stroop-brown: #d9aa80;
+  --stroop-yellow: #ffe066;
+  --stroop-pink: #ff8fd0;
+  --stroop-gray: #bdbdbd;
+  --stroop-turquoise: #5fe0e0;
+
+  --profile-flower: #f2a2c8;
+  --profile-sun: #f3c54b;
+  --profile-bird: #8db1ff;
+  --profile-cat: #d9aa80;
+  --profile-anchor: #7cc8bb;
+  --profile-coffee: #cda6f0;
+
+  --series-alone: #6fb3ff;
+  --series-assisted: #ffa070;
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #121a17;
+  --color-surface: #1b2622;
+  --color-text: #eef3f1;
+  --color-text-muted: #bac7c2;
+  --color-line: #33423d;
+  --color-control-border: #7e8f89;
+  --color-accent: #7cc8bb;
+  --color-on-accent: #0b1513;
+  --color-accent-text: #8fd3c7;
+  --color-accent-soft: #1f3b35;
+  --color-success-border: #6fd394;
+  --color-success-bg: #17301c;
+  --color-neutral-bg: #2a3431;
+  --color-neutral-text: #bac7c2;
+  --color-focus-ring: #000000;
+
+  --stroop-red: #ff8a80;
+  --stroop-blue: #8db1ff;
+  --stroop-green: #73d48f;
+  --stroop-orange: #ffaa5c;
+  --stroop-purple: #cda6f0;
+  --stroop-brown: #d9aa80;
+  --stroop-yellow: #ffe066;
+  --stroop-pink: #ff8fd0;
+  --stroop-gray: #bdbdbd;
+  --stroop-turquoise: #5fe0e0;
+
+  --profile-flower: #f2a2c8;
+  --profile-sun: #f3c54b;
+  --profile-bird: #8db1ff;
+  --profile-cat: #d9aa80;
+  --profile-anchor: #7cc8bb;
+  --profile-coffee: #cda6f0;
+
+  --series-alone: #3987e5;
+  --series-assisted: #d95926;
+}

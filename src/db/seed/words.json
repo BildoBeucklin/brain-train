@@ -1,0 +1,57 @@
+{
+  "_comment": "Wörter für 'Auf dem Kopf' und 'Rückwärts lesen'. distractors: ähnlichster zuerst.",
+  "short": [
+    { "key": "brot", "text": "Brot", "distractors": ["Boot", "Rot", "Brat"] },
+    { "key": "haus", "text": "Haus", "distractors": ["Maus", "Hase", "Hals"] },
+    { "key": "baum", "text": "Baum", "distractors": ["Raum", "Saum", "Bad"] },
+    { "key": "hund", "text": "Hund", "distractors": ["Mund", "Hand", "Rund"] },
+    { "key": "rose", "text": "Rose", "distractors": ["Hose", "Dose", "Rabe"] },
+    { "key": "mond", "text": "Mond", "distractors": ["Mund", "Mode", "Wand"] },
+    { "key": "obst", "text": "Obst", "distractors": ["Ost", "Oben", "Ort"] },
+    { "key": "tee", "text": "Tee", "distractors": ["See", "Fee", "Tal"] },
+    { "key": "salz", "text": "Salz", "distractors": ["Satz", "Saal", "Hals"] },
+    { "key": "buch", "text": "Buch", "distractors": ["Tuch", "Bach", "Bauch"] },
+    { "key": "hut", "text": "Hut", "distractors": ["Mut", "Gut", "Hof"] },
+    { "key": "nest", "text": "Nest", "distractors": ["Rest", "Fest", "Netz"] },
+    { "key": "wald", "text": "Wald", "distractors": ["Wand", "Bald", "Welt"] },
+    { "key": "ofen", "text": "Ofen", "distractors": ["Oben", "Hafen", "Offen"] }
+  ],
+  "medium": [
+    { "key": "garten", "text": "Garten", "distractors": ["Karten", "Gatter", "Raten"] },
+    { "key": "kirche", "text": "Kirche", "distractors": ["Kirsche", "Küche", "Birke"] },
+    { "key": "fenster", "text": "Fenster", "distractors": ["Finster", "Förster", "Feste"] },
+    { "key": "blume", "text": "Blume", "distractors": ["Bluse", "Blase", "Krume"] },
+    { "key": "sonne", "text": "Sonne", "distractors": ["Tonne", "Nonne", "Sohle"] },
+    { "key": "brille", "text": "Brille", "distractors": ["Grille", "Rille", "Brücke"] },
+    { "key": "kuchen", "text": "Kuchen", "distractors": ["Buchen", "Kachel", "Küche"] },
+    { "key": "schule", "text": "Schule", "distractors": ["Schale", "Spule", "Scholle"] },
+    { "key": "teller", "text": "Teller", "distractors": ["Keller", "Taler", "Tester"] },
+    { "key": "apfel", "text": "Apfel", "distractors": ["Ampel", "Gipfel", "Angel"] },
+    { "key": "mantel", "text": "Mantel", "distractors": ["Mandel", "Mangel", "Sattel"] },
+    { "key": "wasser", "text": "Wasser", "distractors": ["Kasse", "Messer", "Waffel"] }
+  ],
+  "long": [
+    { "key": "sonnenblume", "text": "Sonnenblume", "distractors": ["Sonnenbrille", "Sonnenschein", "Kornblume"] },
+    { "key": "kaffeetasse", "text": "Kaffeetasse", "distractors": ["Kaffeekanne", "Kaffeesahne", "Teetasse"] },
+    { "key": "briefmarke", "text": "Briefmarke", "distractors": ["Brieftaube", "Briefkasten", "Bierdeckel"] },
+    { "key": "gartenzaun", "text": "Gartenzaun", "distractors": ["Gartenhaus", "Gartentor", "Garnrolle"] },
+    { "key": "regenschirm", "text": "Regenschirm", "distractors": ["Regenmantel", "Regenbogen", "Lampenschirm"] },
+    { "key": "wochenmarkt", "text": "Wochenmarkt", "distractors": ["Wochenende", "Weihnachtsmarkt", "Flohmarkt"] },
+    { "key": "kartoffelsalat", "text": "Kartoffelsalat", "distractors": ["Kartoffelsuppe", "Kartoffelbrei", "Nudelsalat"] },
+    { "key": "apfelkuchen", "text": "Apfelkuchen", "distractors": ["Apfelstrudel", "Apfelsaft", "Pflaumenkuchen"] },
+    { "key": "naehmaschine", "text": "Nähmaschine", "distractors": ["Nähkästchen", "Waschmaschine", "Kaffeemaschine"] },
+    { "key": "sonntagsbraten", "text": "Sonntagsbraten", "distractors": ["Sonntagskleid", "Sonntagsruhe", "Schweinebraten"] },
+    { "key": "schaukelstuhl", "text": "Schaukelstuhl", "distractors": ["Schaukelpferd", "Lehnstuhl", "Schaufenster"] },
+    { "key": "kinderwagen", "text": "Kinderwagen", "distractors": ["Kindergarten", "Kinderbuch", "Leiterwagen"] }
+  ],
+  "sentences": [
+    { "key": "sonne-scheint", "text": "Heute scheint die Sonne", "distractors": ["Heute scheint der Mond", "Morgen scheint die Sonne", "Heute regnet es"] },
+    { "key": "kaffee-heiss", "text": "Der Kaffee ist heiß", "distractors": ["Der Kaffee ist kalt", "Der Tee ist heiß", "Die Suppe ist warm"] },
+    { "key": "spazieren", "text": "Wir gehen spazieren", "distractors": ["Wir gehen einkaufen", "Sie gehen spazieren", "Wir gehen schwimmen"] },
+    { "key": "brot-frisch", "text": "Das Brot ist frisch", "distractors": ["Das Brot ist alt", "Das Obst ist frisch", "Der Brei ist frisch"] },
+    { "key": "katze-schlaeft", "text": "Die Katze schläft", "distractors": ["Die Katze spielt", "Die Tatze schläft", "Der Hund schläft"] },
+    { "key": "garten-blueht", "text": "Im Garten blüht es", "distractors": ["Im Garten glüht es", "Im Wald blüht es", "Im Garten regnet es"] },
+    { "key": "bald-sonntag", "text": "Bald ist Sonntag", "distractors": ["Bald ist Montag", "Heute ist Sonntag", "Bald ist Feiertag"] },
+    { "key": "zug-puenktlich", "text": "Der Zug kommt pünktlich", "distractors": ["Der Zug kommt später", "Der Bus kommt pünktlich", "Der Zug fährt pünktlich"] }
+  ]
+}

@@ -1,0 +1,80 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #app { height: 100%; margin: 0; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-ui);
+  line-height: 1.4;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font: inherit; }
+
+:focus-visible { outline: none; box-shadow: var(--focus-shadow); }
+h1[tabindex='-1']:focus { box-shadow: none; outline: none; }
+
+/* Ansichten füllen den Bildschirm. Passt bei großer Darstellung nicht alles hinein, scrollt die Ansicht
+   (statt etwas abzuschneiden). */
+body { overflow: hidden; }
+#app > main { overflow-y: auto; }
+
+/* Nur für Screenreader */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Hoher Kontrast: kräftigere Rahmen */
+:root[data-theme='contrast'] button:not(:disabled) { border-color: var(--color-control-border); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Großes Aufgabenwort in der Mitte */
+.stage-word {
+  margin: 0;
+  font-size: var(--text-stage);
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.empty { display: none; }
+
+/* Rückfrage-Dialoge (Reka AlertDialog) */
+.dlg-overlay { position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); }
+.dlg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 480px;
+}
+.dlg-title { margin: 0; font-size: var(--text-task); }
+.dlg-text { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); }
+.dlg-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-3); }
+.dlg-btn {
+  min-height: 64px;
+  padding: 0 var(--space-3);
+  border-radius: 12px;
+  border: 3px solid var(--color-control-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-help);
+  font-weight: 700;
+  cursor: pointer;
+}
+.dlg-btn.primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }

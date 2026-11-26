@@ -1,0 +1,28 @@
+[
+  { "key": "obst-hammer", "min": 1, "max": 3, "members": ["Apfel", "Birne", "Kirsche", "Pflaume"], "odd": "Hammer", "explanation": "Ein Hammer ist kein Obst." },
+  { "key": "tiere-stuhl", "min": 1, "max": 3, "members": ["Hund", "Katze", "Pferd", "Kuh"], "odd": "Stuhl", "explanation": "Ein Stuhl ist kein Tier." },
+  { "key": "blumen-gabel", "min": 1, "max": 3, "members": ["Rose", "Tulpe", "Nelke", "Lilie"], "odd": "Gabel", "explanation": "Eine Gabel ist keine Blume." },
+  { "key": "kleidung-moehre", "min": 1, "max": 3, "members": ["Hemd", "Hose", "Jacke", "Rock"], "odd": "Möhre", "explanation": "Eine Möhre ist kein Kleidungsstück." },
+  { "key": "moebel-banane", "min": 1, "max": 3, "members": ["Tisch", "Stuhl", "Schrank", "Bett"], "odd": "Banane", "explanation": "Eine Banane ist kein Möbelstück." },
+  { "key": "farben-montag", "min": 1, "max": 3, "members": ["Rot", "Blau", "Grün", "Gelb"], "odd": "Montag", "explanation": "Montag ist keine Farbe." },
+  { "key": "besteck-schuh", "min": 1, "max": 3, "members": ["Löffel", "Gabel", "Messer", "Kelle"], "odd": "Schuh", "explanation": "Ein Schuh gehört nicht zum Besteck." },
+  { "key": "fahrzeuge-kissen", "min": 1, "max": 3, "members": ["Auto", "Bus", "Zug", "Fahrrad"], "odd": "Kissen", "explanation": "Ein Kissen ist kein Fahrzeug." },
+
+  { "key": "wochentage-januar", "min": 4, "max": 7, "members": ["Montag", "Dienstag", "Freitag", "Sonntag"], "odd": "Januar", "explanation": "Januar ist ein Monat, kein Wochentag." },
+  { "key": "baeume-rose", "min": 4, "max": 7, "members": ["Eiche", "Buche", "Birke", "Linde"], "odd": "Rose", "explanation": "Eine Rose ist kein Baum." },
+  { "key": "saiten-trompete", "min": 4, "max": 7, "members": ["Geige", "Gitarre", "Harfe", "Cello"], "odd": "Trompete", "explanation": "Die Trompete hat keine Saiten." },
+  { "key": "voegel-fledermaus", "min": 4, "max": 7, "members": ["Spatz", "Amsel", "Meise", "Drossel"], "odd": "Fledermaus", "explanation": "Eine Fledermaus ist kein Vogel." },
+  { "key": "hafen-muenchen", "min": 4, "max": 7, "members": ["Hamburg", "Bremen", "Kiel", "Rostock"], "odd": "München", "explanation": "München ist keine Hafenstadt." },
+  { "key": "erde-gurke", "min": 4, "max": 7, "members": ["Kartoffel", "Möhre", "Radieschen", "Rote Bete"], "odd": "Gurke", "explanation": "Die Gurke wächst nicht in der Erde." },
+  { "key": "jahreszeiten-ostern", "min": 4, "max": 7, "members": ["Frühling", "Sommer", "Herbst", "Winter"], "odd": "Ostern", "explanation": "Ostern ist ein Fest, keine Jahreszeit." },
+  { "key": "metalle-holz", "min": 4, "max": 7, "members": ["Kupfer", "Eisen", "Silber", "Gold"], "odd": "Holz", "explanation": "Holz ist kein Metall." },
+
+  { "key": "saeuger-hai", "min": 8, "max": 10, "members": ["Wal", "Delfin", "Robbe", "Seekuh"], "odd": "Hai", "explanation": "Der Hai ist ein Fisch, die anderen sind Säugetiere." },
+  { "key": "dichter-mozart", "min": 8, "max": 10, "members": ["Goethe", "Schiller", "Fontane", "Heine"], "odd": "Mozart", "explanation": "Mozart war Komponist, kein Dichter." },
+  { "key": "fluesse-bodensee", "min": 8, "max": 10, "members": ["Rhein", "Elbe", "Donau", "Weser"], "odd": "Bodensee", "explanation": "Der Bodensee ist ein See, kein Fluss." },
+  { "key": "fruchtgemuese-moehre", "min": 8, "max": 10, "members": ["Tomate", "Paprika", "Gurke", "Kürbis"], "odd": "Möhre", "explanation": "Die Möhre ist eine Wurzel, die anderen sind Fruchtgemüse." },
+  { "key": "laufvoegel-adler", "min": 8, "max": 10, "members": ["Pinguin", "Strauß", "Kiwi", "Emu"], "odd": "Adler", "explanation": "Der Adler kann fliegen, die anderen nicht." },
+  { "key": "planeten-mond", "min": 8, "max": 10, "members": ["Merkur", "Venus", "Mars", "Jupiter"], "odd": "Mond", "explanation": "Der Mond ist kein Planet." },
+  { "key": "raummasse-kilogramm", "min": 8, "max": 10, "members": ["Liter", "Milliliter", "Hektoliter", "Kubikmeter"], "odd": "Kilogramm", "explanation": "Kilogramm ist ein Gewicht, kein Raummaß." },
+  { "key": "taenze-sonate", "min": 8, "max": 10, "members": ["Walzer", "Tango", "Foxtrott", "Polka"], "odd": "Sonate", "explanation": "Eine Sonate ist kein Tanz." }
+]

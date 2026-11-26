@@ -55,6 +55,12 @@ export const useSettingsStore = defineStore('settings', () => {
     await set('zoom', stepZoom(values.zoom, dir))
   }
 
+  // --vw = 1 % der tatsächlich sichtbaren Breite in (gezoomten) CSS-px, damit Ränder beim Vergrößern schrumpfen
+  function setVw(): void {
+    if (typeof window === 'undefined') return
+    document.documentElement.style.setProperty('--vw', `${window.innerWidth / (values.zoom || 1) / 100}px`)
+  }
+
   // Theme, Schriftgröße und Zoom auf das Dokument anwenden
   watchEffect(() => {
     if (typeof document === 'undefined') return
@@ -63,13 +69,14 @@ export const useSettingsStore = defineStore('settings', () => {
     root.style.setProperty('--font-scale', String(values.fontScale))
     // CSS-zoom vergrößert alles gleichmäßig; das Layout bricht dabei neu um (Chromium/WebView2, Firefox ≥ 126)
     root.style.setProperty('zoom', String(values.zoom))
+    setVw()
   })
 
   // --vh = 1 % der Fensterhöhe; Aufgaben passen sich damit bei 100 % an die Höhe an und wachsen beim Vergrößern mit
   if (typeof window !== 'undefined') {
     const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight / 100}px`)
     setVh()
-    window.addEventListener('resize', setVh)
+    window.addEventListener('resize', () => { setVh(); setVw() })
   }
 
   return { values, load, set, zoomBy }

@@ -144,7 +144,7 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
 
 <style scoped>
 .shop { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 100%; }
-.shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(140px, calc((100% - (var(--cols) - 1) * var(--space-2)) / var(--cols))), 1fr)); gap: var(--space-2); width: min(100%, 64rem); }
+.shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(min(140px, 100%), calc((100% - (var(--cols) - 1) * var(--space-2)) / var(--cols))), 1fr)); gap: var(--space-2); width: min(100%, 64rem); }
 .product {
   position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: var(--space-1); min-height: 0;

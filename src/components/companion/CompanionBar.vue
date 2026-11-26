@@ -109,8 +109,9 @@ const run = (fn: () => void) => () => { if (acceptTap()) fn() }
   align-items: center;
   justify-content: center;
   gap: var(--space-1);
-  height: var(--companion-height);
-  padding: 0 var(--space-1);
+  flex-wrap: wrap;
+  min-height: var(--companion-height);
+  padding: 2px var(--space-1);
   background: var(--color-surface);
   border-top: 2px solid var(--color-line);
   font-size: var(--text-min);
@@ -122,7 +123,7 @@ const run = (fn: () => void) => () => { if (acceptTap()) fn() }
   align-items: center;
   justify-content: center;
   gap: 2px;
-  height: 68px;
+  min-height: 68px;
   padding: 0 8px;
   border: 2px solid transparent;
   border-radius: 10px;
@@ -152,7 +153,7 @@ const run = (fn: () => void) => () => { if (acceptTap()) fn() }
 
 <style>
 .tip {
-  max-width: 420px;
+  max-width: min(420px, calc(var(--vw) * 90));
   padding: var(--space-2);
   border-radius: 12px;
   background: var(--color-text);

@@ -61,11 +61,14 @@ body { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  min-width: 480px;
+  min-width: min(480px, calc(var(--vw) * 100 - 32px));
+  max-width: calc(var(--vw) * 100 - 32px);
+  max-height: 90%;
+  overflow-y: auto;
 }
 .dlg-title { margin: 0; font-size: var(--text-task); }
 .dlg-text { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); }
-.dlg-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-3); }
+.dlg-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-3); }
 .dlg-btn {
   min-height: 64px;
   padding: 0 var(--space-3);

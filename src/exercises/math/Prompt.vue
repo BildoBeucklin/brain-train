@@ -34,7 +34,7 @@ defineProps<{ task: Task<MathData> }>()
 .dot { width: 80px; height: 80px; border-radius: 50%; background: var(--color-accent); }
 .receipt {
   border-collapse: collapse;
-  min-width: 420px;
+  min-width: min(420px, 100%);
   font-size: var(--text-task);
   background: var(--color-surface);
   border-radius: var(--radius);

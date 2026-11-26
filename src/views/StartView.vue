@@ -134,7 +134,7 @@ async function go(exercise?: ExerciseId) {
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   gap: var(--space-5);
-  padding: var(--space-6) var(--space-8);
+  padding: min(var(--space-6), var(--page-pad)) var(--page-pad);
   max-width: 1400px;
   margin-inline: auto;
 }
@@ -150,7 +150,7 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
 .no-profiles { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); grid-row: 2; align-self: center; }
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(max(220px, calc((100% - 2 * var(--space-3)) / 3)), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(min(220px, 100%), calc((100% - 2 * var(--space-3)) / 3)), 1fr));
   grid-auto-rows: minmax(180px, 260px);
   gap: var(--space-3);
   align-content: center;
@@ -159,7 +159,7 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
 .choices { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; }
 .exercises {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: var(--space-2);
   align-content: center;
   min-height: 0;

@@ -32,7 +32,8 @@ function onClick() {
   justify-content: center;
   gap: var(--space-2);
   min-height: 72px;
-  min-width: 200px;
+  min-width: min(200px, 100%);
+  max-width: 100%;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius);
   border: 3px solid var(--color-control-border);
@@ -43,7 +44,7 @@ function onClick() {
   cursor: pointer;
   transition: background-color 120ms, transform 80ms;
 }
-.big-button.large { min-height: 96px; min-width: 320px; font-size: var(--text-answer); }
+.big-button.large { min-height: 96px; min-width: min(320px, 100%); font-size: var(--text-answer); }
 .big-button.primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
 .big-button:hover:not(:disabled) { background: var(--color-accent-soft); }
 .big-button.primary:hover:not(:disabled) { background: var(--color-accent); filter: brightness(1.1); }

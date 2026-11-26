@@ -140,7 +140,7 @@ const status = computed(() => {
   grid-template-rows: auto auto 1fr auto auto;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-6) var(--space-3);
+  padding: var(--space-2) min(var(--space-6), var(--page-pad)) var(--space-3);
   max-width: 1600px;
   margin-inline: auto;
 }

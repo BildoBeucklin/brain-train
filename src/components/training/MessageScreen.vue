@@ -18,7 +18,7 @@ defineProps<{ title: string; text?: string }>()
   flex-direction: column;
   justify-content: center;
   gap: var(--space-4);
-  padding: var(--space-8);
+  padding: var(--page-pad);
   max-width: 1100px;
   margin-inline: auto;
 }

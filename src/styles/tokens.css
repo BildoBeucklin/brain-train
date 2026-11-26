@@ -4,7 +4,10 @@
 
   /* Schrift; --font-scale später aus settings.fontScale (4 Stufen) */
   --font-scale: 1;
-  --vh: 8px; /* wird beim Start auf 1 % der Fensterhöhe gesetzt (stores/settings.ts) */
+  --vh: 8px;
+  --vw: 12.8px; /* 1 % der sichtbaren Breite, zoomkorrigiert (stores/settings.ts) */
+  /* Seitenrand: schrumpft auf schmalen/stark vergrößerten Ansichten */
+  --page-pad: clamp(var(--space-2), calc(var(--vw) * 4), var(--space-8)); /* wird beim Start auf 1 % der Fensterhöhe gesetzt (stores/settings.ts) */
   --text-min: calc(1.25rem * var(--font-scale)); /* 20 px, nie kleiner (Begleitleiste) */
   --text-help: calc(1.5rem * var(--font-scale)); /* 24 px Hilfetexte */
   --text-answer: calc(2rem * var(--font-scale)); /* 32 px Antworten */

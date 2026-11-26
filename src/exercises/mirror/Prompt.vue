@@ -4,7 +4,10 @@ import { Check, X } from 'lucide-vue-next'
 import { iconByName } from '@/components/icons'
 import { useTrainingStore } from '@/stores/training'
 import type { Task } from '../types'
-import type { MirrorData } from './generator'
+import { MIRROR_PICTURES, type MirrorData } from './generator'
+
+const pictureName = (icon: string) => MIRROR_PICTURES.find((p) => p.icon === icon)?.name ?? icon
+const RESULT = { plain: '', picked: '', found: ', gefunden', wrong: ', war gespiegelt', missed: ', übersehen' } as const
 
 const props = defineProps<{ task: Task<MirrorData>; phase: string }>()
 const training = useTrainingStore()
@@ -30,9 +33,10 @@ function tap(i: number) {
 
 <template>
   <div class="mirror">
-    <div class="box" :style="{ '--cols': task.data.cols }" aria-label="Vorlage">
-      <span v-for="(icon, i) in task.data.left" :key="i" class="cell">
+    <div class="box" :style="{ '--cols': task.data.cols }" role="list" aria-label="Vorlage">
+      <span v-for="(icon, i) in task.data.left" :key="i" class="cell" role="listitem">
         <component :is="iconByName(icon)" :stroke-width="1.75" aria-hidden="true" />
+        <span class="sr-only">{{ pictureName(icon) }}</span>
       </span>
     </div>
 
@@ -47,7 +51,7 @@ function tap(i: number) {
         :class="`is-${state(i)}`"
         :disabled="done || printing"
         :aria-pressed="selected.includes(`p${i}`)"
-        :aria-label="task.options[i]!.label"
+        :aria-label="`${task.options[i]!.label}: ${pictureName(p.icon)}${RESULT[state(i)]}`"
         :data-testid="`mirror-${i}`"
         @click="tap(i)"
       >
@@ -68,11 +72,16 @@ function tap(i: number) {
 <style scoped>
 .mirror {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  max-height: 100%;
+}
+@container (max-width: 640px) {
+  .mirror { grid-template-columns: auto; }
+  .mirror-line { width: auto; height: 4px; }
+  .legend { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .cell { width: clamp(40px, calc((100cqw - 80px) / var(--cols)), 96px); }
 }
 .box {
   display: grid;
@@ -87,7 +96,7 @@ function tap(i: number) {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(48px, calc((100vh - 420px) / var(--cols)), 96px);
+  width: clamp(40px, min(calc((100cqw - 160px) / (2 * var(--cols))), calc((var(--vh) * 100 - 540px) / var(--cols))), 96px);
   aspect-ratio: 1;
   color: var(--color-text);
 }
@@ -111,8 +120,7 @@ function tap(i: number) {
 .is-found .mark { color: var(--color-success-border); }
 
 .legend {
-  grid-column: 1 / -1;
-  display: flex; justify-content: center; gap: var(--space-3); flex-wrap: wrap;
+  display: flex; flex-direction: column; gap: var(--space-1);
   margin: 0; font-size: var(--text-help);
 }
 .key { padding: 2px 12px; border: 3px solid transparent; border-radius: 10px; }

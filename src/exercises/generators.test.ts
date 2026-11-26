@@ -111,9 +111,10 @@ describe('Spiegelbilder', () => {
         const t = generate('mirror', level, s) as Task<MirrorData>
         const { cols, left, right } = t.data
         right.forEach((p, i) => {
-          expect(p.icon).toBe(left[Math.floor(i / cols) * cols + (cols - 1 - (i % cols))])
+          if (band(level) !== 'high') expect(p.icon).toBe(left[Math.floor(i / cols) * cols + (cols - 1 - (i % cols))])
           expect(t.correctIds.includes(`p${i}`)).toBe(p.plain)
         })
+        expect(right.map((p) => p.icon).sort()).toEqual([...left].sort())
         expect(t.singleTry).toBe(true)
         expect(new Set(left).size).toBe(left.length)
       }

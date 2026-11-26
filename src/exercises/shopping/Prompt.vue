@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { Check, ClipboardList, ShoppingBasket, X } from 'lucide-vue-next'
 import { useTrainingStore } from '@/stores/training'
 import { euro } from '../math/generator'
@@ -31,9 +31,23 @@ const name = (key: string) => productByKey(key)?.name ?? key
 const pickProduct = computed(() => (picking.value ? productByKey(picking.value) : undefined))
 const counts = computed(() => Array.from({ length: props.task.data.maxCount ?? 0 }, (_, i) => i + 1))
 
-function openProduct(key: string) {
+const pickerEl = ref<HTMLElement | null>(null)
+
+/** Anzahl-Auswahl öffnen; Tastatur/Screenreader: Fokus springt hinein, Escape schließt. */
+async function openProduct(key: string) {
   if (done.value || printing.value) return
   picking.value = picking.value === key ? null : key
+  if (picking.value) {
+    await nextTick()
+    pickerEl.value?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
+  }
+}
+
+async function closePicker() {
+  const key = picking.value
+  picking.value = null
+  await nextTick()
+  if (key) document.querySelector<HTMLElement>(`[data-testid="product-${key}"]`)?.focus()
 }
 
 /** Anzahl festlegen; 0 nimmt die Ware wieder aus dem Korb. */
@@ -41,7 +55,7 @@ function setCount(key: string, n: number) {
   const old = basket.value.get(key)
   if (old) training.answer(shopId(key, old))
   if (n && n !== old) training.answer(shopId(key, n))
-  picking.value = null
+  void closePicker()
 }
 
 const blocked = (key: string, n: number) => training.eliminated.includes(shopId(key, n))
@@ -60,16 +74,18 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
         :class="{ chosen: basket.has(key), active: picking === key }"
         :disabled="done || printing"
         :data-testid="`product-${key}`"
+        :aria-expanded="picking === key"
+        :aria-label="basket.has(key) ? `${name(key)}, im Korb: ${basket.get(key)}` : name(key)"
         @click="openProduct(key)"
       >
         <img :src="productImage(key)" alt="" />
         <span class="pname">{{ name(key) }}</span>
-        <span v-if="basket.has(key)" class="badge">{{ basket.get(key) }}</span>
+        <span v-if="basket.has(key)" class="badge" aria-hidden="true">{{ basket.get(key) }}</span>
         <span v-if="printing" class="write">Anzahl: ____</span>
       </button>
     </div>
 
-    <div v-if="pickProduct" class="picker" role="dialog" :aria-label="`Wie viele ${pickProduct.plural}?`">
+    <div v-if="pickProduct" ref="pickerEl" class="picker" role="group" :aria-label="`Wie viele ${pickProduct.plural}?`" @keydown.esc.stop="closePicker">
       <p class="ask">Wie viele {{ pickProduct.plural }}?</p>
       <div class="counts">
         <button
@@ -80,6 +96,7 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
           :class="{ current: basket.get(pickProduct.key) === n }"
           :disabled="blocked(pickProduct.key, n)"
           :data-testid="`count-${n}`"
+          :aria-pressed="basket.get(pickProduct.key) === n"
           @click="setCount(pickProduct.key, n)"
         >{{ n }}</button>
         <button v-if="basket.has(pickProduct.key)" type="button" class="count remove" data-testid="count-0" @click="setCount(pickProduct.key, 0)">
@@ -88,7 +105,8 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
       </div>
     </div>
 
-    <div v-if="!printing" class="basket" aria-label="Korb">
+    <div v-if="!printing" class="basket" role="status" aria-live="polite">
+      <span class="sr-only">Im Korb:</span>
       <ShoppingBasket :size="32" aria-hidden="true" />
       <span v-if="!basket.size" class="empty-basket">Der Korb ist noch leer.</span>
       <span v-for="[key, n] in basket" :key="key" class="in-basket" :class="{ ok: done && lineOk(key, n), wrong: done && !lineOk(key, n) }">
@@ -125,17 +143,17 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
 </template>
 
 <style scoped>
-.shop { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 100%; max-height: 100%; overflow-y: auto; }
-.shelf { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: var(--space-2); width: min(100%, 64rem); }
+.shop { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: 100%; }
+.shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(140px, calc((100% - (var(--cols) - 1) * var(--space-2)) / var(--cols))), 1fr)); gap: var(--space-2); width: min(100%, 64rem); }
 .product {
   position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: var(--space-1); min-height: 120px;
+  padding: var(--space-1); min-height: 0;
   border: 3px solid var(--color-control-border); border-radius: var(--radius);
   background: var(--color-surface); color: var(--color-text);
   font-size: var(--text-help); font-weight: 700; cursor: pointer;
 }
 .product:disabled { cursor: default; }
-.product img { width: 72px; height: 72px; object-fit: contain; }
+.product img { width: clamp(44px, calc(var(--vh) * 7), 72px); height: clamp(44px, calc(var(--vh) * 7), 72px); object-fit: contain; }
 .product.chosen { border-color: var(--color-accent); background: var(--color-accent-soft); }
 .product.active { border-width: 5px; border-color: var(--color-accent); }
 .badge {
@@ -168,7 +186,7 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
 
 .note {
   min-width: min(100%, 26rem);
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-2) var(--space-5);
   background: #fffbe6;
   color: #222;
   border-radius: 6px;
@@ -177,9 +195,9 @@ const lineOk = (key: string, n: number) => props.task.correctIds.includes(shopId
 .title { margin: 0 0 var(--space-1); font-weight: 700; font-size: var(--text-help); text-decoration: underline; }
 ul { list-style: none; margin: 0; padding: 0; }
 li {
-  display: flex; align-items: center; gap: var(--space-2); min-height: 3rem;
+  display: flex; align-items: center; gap: var(--space-2); min-height: 2.6rem;
   border-bottom: 2px solid #c9d8ef;
-  font-size: clamp(1.5rem, 4vh, 2.25rem);
+  font-size: clamp(1.5rem, 3cqw, 2.25rem);
   font-family: 'Segoe Print', 'Comic Sans MS', cursive;
 }
 li img { width: 2.5rem; height: 2.5rem; object-fit: contain; }

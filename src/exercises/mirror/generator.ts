@@ -1,5 +1,5 @@
 import { band, withinBand } from '../levels'
-import { sample } from '../random'
+import { sample, shuffle } from '../random'
 import type { ExerciseDefinition, Option, Task } from '../types'
 
 /** Nur seitlich bzw. schräg gezeichnete, also deutlich spiegelbare Motive. Mindestens 25 (5×5 ohne Doppelte). */
@@ -53,7 +53,7 @@ const SETUP = {
 } as const
 
 /**
- * Links eine Box mit Bildern, rechts dieselbe Box gespiegelt. Einige Bilder rechts sind nicht gespiegelt:
+ * Links eine Box mit Bildern, rechts dieselbe Box gespiegelt (ab Niveau 8 zusätzlich durcheinander). Einige Bilder rechts sind nicht gespiegelt:
  * Diese antippen, dann „Ja, das war alles“. Ein Versuch; danach werden Treffer, Fehlgriffe und Übersehenes gezeigt.
  */
 export const mirror: ExerciseDefinition<MirrorData> = {
@@ -64,7 +64,7 @@ export const mirror: ExerciseDefinition<MirrorData> = {
   companionTips: {
     low: 'Zeigen Sie auf ein Bild links und suchen Sie es gemeinsam rechts.',
     mid: 'Reihe für Reihe vorgehen: Schaut das Bild rechts in die andere Richtung?',
-    high: 'Ruhig Zeit lassen und am Ende noch einmal alle Reihen prüfen.',
+    high: 'Die Bilder sind durcheinander: Erst jedes Bild links rechts suchen, dann die Richtung vergleichen.',
   },
   generate({ level, random }): Task<MirrorData> {
     const b = band(level)
@@ -73,11 +73,11 @@ export const mirror: ExerciseDefinition<MirrorData> = {
     const left = sample(random, MIRROR_PICTURES, n).map((p) => p.icon) // jedes Bild nur einmal
     const oddCount = withinBand(level) < 0.5 ? odd[0] : odd[1]
     const plainAt = new Set(sample(random, Array.from({ length: n }, (_, i) => i), oddCount))
-    // Platz (r, c) rechts zeigt Platz (r, cols-1-c) links – wie in einem Spiegel
-    const right = Array.from({ length: n }, (_, i) => {
-      const r = Math.floor(i / cols), c = i % cols
-      return { icon: left[r * cols + (cols - 1 - c)]!, plain: plainAt.has(i) }
-    })
+    // Niveau 1–7: Platz (r, c) rechts zeigt Platz (r, cols-1-c) links – wie in einem Spiegel.
+    // Niveau 8–10: rechts dieselben Bilder, aber über das ganze Feld gemischt (auch über Reihen hinweg).
+    const mirrored = Array.from({ length: n }, (_, i) => left[Math.floor(i / cols) * cols + (cols - 1 - (i % cols))]!)
+    const order = b === 'high' ? shuffle(random, mirrored) : mirrored
+    const right = order.map((icon, i) => ({ icon, plain: plainAt.has(i) }))
     const options: Option[] = right.map((_, i) => ({
       id: `p${i}`, label: `Reihe ${Math.floor(i / cols) + 1}, Platz ${(i % cols) + 1}`,
     }))
@@ -91,7 +91,7 @@ export const mirror: ExerciseDefinition<MirrorData> = {
       data: { cols, left, right },
       options, correctIds,
       hint: 'Ein Spiegelbild schaut in die andere Richtung als das Bild links.',
-      explanation: `Nicht gespiegelt waren ${oddCount === 1 ? 'dieses Bild' : `diese ${oddCount} Bilder`}: ${correctIds.map((id) => options.find((o) => o.id === id)!.label).join('; ')}.`,
+      explanation: `Nicht gespiegelt ${oddCount === 1 ? 'war 1 Bild' : `waren ${oddCount} Bilder`} – rechts markiert.`,
     }
   },
 }

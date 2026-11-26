@@ -15,7 +15,7 @@ const columns = computed(() => (props.count === 4 ? 2 : props.count === 2 ? 2 : 
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: repeat(var(--cols), minmax(var(--answer-min-width), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(min(var(--answer-min-width), 100%), calc((100% - (var(--cols) - 1) * var(--answer-gap)) / var(--cols))), 1fr));
   gap: var(--answer-gap);
   width: 100%;
   max-width: calc(var(--cols) * 400px + (var(--cols) - 1) * var(--answer-gap));

@@ -90,7 +90,7 @@ function save() {
 .overlay { position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); }
 .dialog {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: min(860px, calc(100vw - 2 * var(--space-4))); max-height: calc(100vh - 2 * var(--space-3));
+  width: min(860px, calc(100% - 2 * var(--space-4))); max-height: calc(100% - 2 * var(--space-3)); overflow-y: auto;
   display: flex; flex-direction: column; gap: var(--space-2);
   padding: var(--space-4); border-radius: var(--radius); background: var(--color-surface); color: var(--color-text);
 }

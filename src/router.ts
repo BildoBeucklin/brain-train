@@ -22,6 +22,13 @@ export const router = createRouter({
   ],
 })
 
+// Screenreader: Seitentitel setzen und die Überschrift der neuen Ansicht vorlesen lassen
+router.afterEach(async (to, from) => {
+  const { focusHeading, titleFor } = await import('@/composables/useHeadingFocus')
+  document.title = titleFor(to.name)
+  if (from.matched.length) void focusHeading()
+})
+
 // Training nur mit laufender Einheit (z. B. nicht nach einem Neuladen mitten drin)
 router.beforeEach(async (to) => {
   if (to.name !== 'training') return true

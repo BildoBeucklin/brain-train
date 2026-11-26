@@ -14,9 +14,18 @@ body {
 button { font: inherit; }
 
 :focus-visible { outline: none; box-shadow: var(--focus-shadow); }
+h1[tabindex='-1']:focus { box-shadow: none; outline: none; }
 
-/* Keine Scrollbereiche im Training: Ansichten füllen genau den Bildschirm. */
+/* Ansichten füllen den Bildschirm. Passt bei großer Darstellung nicht alles hinein, scrollt die Ansicht
+   (statt etwas abzuschneiden). */
 body { overflow: hidden; }
+#app > main { overflow-y: auto; }
+
+/* Nur für Screenreader */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Hoher Kontrast: kräftigere Rahmen */
+:root[data-theme='contrast'] button:not(:disabled) { border-color: var(--color-control-border); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

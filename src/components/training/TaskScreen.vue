@@ -15,6 +15,7 @@ import HintBanner from './HintBanner.vue'
 import HelpToggle from '@/components/companion/HelpToggle.vue'
 import { MessageCircle } from 'lucide-vue-next'
 import ProgressDots from './ProgressDots.vue'
+import DisplayControls from '@/components/DisplayControls.vue'
 
 const training = useTrainingStore()
 const settings = useSettingsStore()
@@ -37,6 +38,17 @@ function stateOf(id: string): AnswerState {
 }
 
 watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.sound) playSoftChime() })
+
+/** Screenreader: Rückmeldung nach dem Antworten (sichtbar ist sie an den Antwortflächen). */
+const status = computed(() => {
+  const t = task.value
+  const right = t.options.filter((o) => t.correctIds.includes(o.id)).map((o) => o.label).join(', ')
+  if (training.phase === 'correct') return `Richtig! ${t.explanation ?? ''}`
+  if (training.phase === 'solution') return `Die richtige Antwort: ${right}. ${t.explanation ?? ''}`
+  if (training.hintVisible) return `Noch nicht ganz. ${t.hint}`
+  if (task.value.select === 'multi' && training.selected.length) return `${training.selected.length} ausgewählt`
+  return ''
+})
 </script>
 
 <template>
@@ -48,10 +60,13 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
         <ProgressDots :total="training.blockSize" :done="training.blockIndex + (training.done ? 1 : 0)" />
       </div>
       <div class="top-right">
+        <DisplayControls />
         <HelpToggle :active="training.assisted" @toggle="training.setAssisted(!training.assisted)" />
         <BigButton label="Pause" :icon="Pause" data-testid="pause" @press="training.pause()" />
       </div>
     </header>
+
+    <p class="sr-only" role="status" aria-live="polite" data-testid="sr-status">{{ status }}</p>
 
     <h1 class="prompt">{{ task.open && !memorizing ? task.open.prompt : promptText }}</h1>
 
@@ -120,15 +135,16 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
 
 <style scoped>
 .task-screen {
-  height: 100%;
+  min-height: 100%;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-6) var(--space-4);
+  padding: var(--space-2) var(--space-6) var(--space-3);
   max-width: 1600px;
   margin-inline: auto;
 }
-.top-right { display: flex; align-items: center; gap: var(--space-2); }
+.top-right { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .open-note {
   display: flex;
   align-items: center;
@@ -139,7 +155,7 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
   font-size: var(--text-answer);
 }
 .open-note :deep(svg) { color: var(--color-accent-text); flex: none; }
-.top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
 .where {
   display: flex;
   align-items: center;
@@ -149,7 +165,7 @@ watch(() => training.phase, (p) => { if (p === 'correct' && settings.values.soun
 }
 .where :deep(.dots) { margin-left: var(--space-3); }
 .prompt { margin: 0; font-size: var(--text-task); line-height: 1.25; text-align: left; }
-.stage { display: grid; place-items: center; min-height: 0; overflow: hidden; }
+.stage { display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; min-width: 0; container-type: inline-size; }
 .bottom { display: flex; flex-direction: column; gap: var(--space-2); min-height: 96px; justify-content: flex-end; }
 .explanation { margin: 0; font-size: var(--text-help); font-weight: 700; text-align: left; }
 .actions { display: flex; justify-content: flex-end; gap: var(--space-3); }

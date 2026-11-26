@@ -1,12 +1,14 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Fenster main: Grundrechte, Speichern-/Öffnen-Dialog und Lesen/Schreiben der dort gewählten Datei (Export/Import)",
+  "description": "Fenster main: Grundrechte, Speichern-/Öffnen-Dialog und Lesen/Schreiben der dort gewählten Datei (Export/Import), Fenster verkleinern/schließen",
   "windows": [
     "main"
   ],
   "permissions": [
     "core:default",
+    "core:window:allow-minimize",
+    "core:window:allow-close",
     "dialog:allow-save",
     "dialog:allow-open",
     "fs:allow-write-text-file",

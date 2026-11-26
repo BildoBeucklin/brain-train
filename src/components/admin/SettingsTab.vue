@@ -12,7 +12,7 @@ import { setPin } from '@/lib/pin'
 import { usePwaUpdate } from '@/composables/usePwaUpdate'
 import { useContentStore } from '@/stores/content'
 import { useProfileStore } from '@/stores/profile'
-import { useSettingsStore, type Settings } from '@/stores/settings'
+import { useSettingsStore, ZOOM_STEPS, type Settings } from '@/stores/settings'
 import PinPad from './PinPad.vue'
 
 const settings = useSettingsStore()
@@ -110,6 +110,18 @@ async function onPin(pin: string) {
         <label class="choice" :class="{ on: settings.values.theme === 'light' }"><input type="radio" name="theme" :checked="settings.values.theme === 'light'" @change="settings.set('theme', 'light')" /> Hell</label>
         <label class="choice" :class="{ on: settings.values.theme === 'dark' }"><input type="radio" name="theme" :checked="settings.values.theme === 'dark'" data-testid="theme-dark" @change="settings.set('theme', 'dark')" /> Dunkel</label>
       </fieldset>
+      <fieldset class="choices">
+        <legend>Hoher Kontrast (Schwarz, Weiß, Gelb)</legend>
+        <label class="choice" :class="{ on: settings.values.contrast }"><input type="radio" name="contrast" :checked="settings.values.contrast" data-testid="contrast-on" @change="settings.set('contrast', true)" /> An</label>
+        <label class="choice" :class="{ on: !settings.values.contrast }"><input type="radio" name="contrast" :checked="!settings.values.contrast" @change="settings.set('contrast', false)" /> Aus</label>
+      </fieldset>
+      <fieldset class="choices">
+        <legend>Größe der ganzen Oberfläche</legend>
+        <label v-for="z in ZOOM_STEPS" :key="z" class="choice" :class="{ on: settings.values.zoom === z }">
+          <input type="radio" name="zoom" :checked="settings.values.zoom === z" @change="settings.set('zoom', z)" /> {{ Math.round(z * 100) }} %
+        </label>
+      </fieldset>
+      <p class="tip">Die Größe lässt sich auch jederzeit oben mit „−A“ und „+A“ oder mit Strg + Plus / Strg + Minus ändern (Strg + 0: normal).</p>
     </div>
 
     <div class="box">
@@ -160,4 +172,5 @@ h2 { margin: 0; font-size: var(--text-help); }
 .row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .message, .due { padding: var(--space-2); border-radius: 12px; background: var(--color-accent-soft); font-size: var(--text-min); font-weight: 700; margin: 0; }
 .confirm { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-2); border: 3px solid var(--color-accent); border-radius: 12px; }
+.tip { margin: 0; font-size: var(--text-min); color: var(--color-text-muted); }
 </style>

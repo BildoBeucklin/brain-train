@@ -6,7 +6,7 @@ defineProps<{ text: string }>()
 </script>
 
 <template>
-  <div class="hint" role="status">
+  <div class="hint">
     <Lightbulb class="icon" :size="36" :stroke-width="2" aria-hidden="true" />
     <p><strong>Schauen Sie noch einmal genau hin.</strong> {{ text }}</p>
   </div>

@@ -5,6 +5,8 @@ import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { ArrowLeft, Dices, HandHelping, LayoutGrid, Play, Settings2 } from 'lucide-vue-next'
 import BigButton from '@/components/BigButton.vue'
 import ProfileTile from '@/components/profile/ProfileTile.vue'
+import WindowControls from '@/components/WindowControls.vue'
+import DisplayControls from '@/components/DisplayControls.vue'
 import { iconByName } from '@/components/icons'
 import type { ExerciseId } from '@/db/database'
 import { EXERCISE_IDS, registry } from '@/exercises/registry'
@@ -48,9 +50,13 @@ async function go(exercise?: ExerciseId) {
       <h1 v-if="view === 'profiles'">Guten Tag! Wer trainiert heute?</h1>
       <h1 v-else>Welche Übung möchten Sie machen?</h1>
       <!-- für Begleitpersonen; bewusst unauffällig -->
-      <RouterLink to="/verwaltung" class="admin-link" data-testid="to-admin">
-        <Settings2 :size="22" aria-hidden="true" /><span>Verwaltung</span>
-      </RouterLink>
+      <div class="head-right">
+        <DisplayControls />
+        <RouterLink to="/verwaltung" class="admin-link" data-testid="to-admin">
+          <Settings2 :size="22" aria-hidden="true" /><span>Verwaltung</span>
+        </RouterLink>
+        <WindowControls />
+      </div>
     </header>
 
     <div v-if="view === 'exercises'" class="exercises" data-testid="exercise-picker">
@@ -124,7 +130,7 @@ async function go(exercise?: ExerciseId) {
 
 <style scoped>
 .start {
-  height: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   gap: var(--space-5);
@@ -133,7 +139,8 @@ async function go(exercise?: ExerciseId) {
   margin-inline: auto;
 }
 h1 { margin: 0; font-size: var(--text-task); text-align: left; }
-.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.head-right { display: flex; gap: var(--space-1); flex-wrap: wrap; justify-content: flex-end; }
 .admin-link {
   display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 0 var(--space-2);
   border: 2px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
@@ -143,7 +150,7 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
 .no-profiles { margin: 0; font-size: var(--text-help); color: var(--color-text-muted); grid-row: 2; align-self: center; }
 .tiles {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(220px, calc((100% - 2 * var(--space-3)) / 3)), 1fr));
   grid-auto-rows: minmax(180px, 260px);
   gap: var(--space-3);
   align-content: center;
@@ -169,7 +176,7 @@ h1 { margin: 0; font-size: var(--text-task); text-align: left; }
 .exercise:hover:not(:disabled) { background: var(--color-accent-soft); border-color: var(--color-accent); }
 .exercise :deep(svg) { color: var(--color-accent-text); flex: none; }
 .credits { margin-top: calc(-1 * var(--space-3)); font-size: var(--text-min); color: var(--color-text-muted); text-align: center; line-height: 1.4; }
-.bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.bottom { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
 .toggle {
   display: inline-flex;
   align-items: center;

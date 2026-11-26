@@ -66,8 +66,9 @@ function save() {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(760px, calc(100vw - 2 * var(--space-4)));
-  max-height: calc(100vh - 2 * var(--space-4));
+  width: min(760px, calc(100% - 2 * var(--space-4)));
+  max-height: calc(100% - 2 * var(--space-4));
+  overflow-y: auto;
   padding: var(--space-5);
   border-radius: var(--radius);
   background: var(--color-surface);

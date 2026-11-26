@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
-import { createProfile, DEBOUNCE, expectFits, leaveAdmin, openAdmin, typePin } from './helpers'
+import { answerByTapping, createProfile, DEBOUNCE, expectFits, leaveAdmin, openAdmin, typePin } from './helpers'
 
 test('Startbildschirm ohne Profile: Hinweis, kein Anlegen ohne PIN', async ({ page }) => {
   await page.goto('/')
@@ -138,7 +138,9 @@ test('Verlauf zeigt Minuten und Niveaus nach einer Einheit, mit Hinweis „kein 
     const screen = page.locator('.task-screen')
     if ((await screen.getAttribute('data-phase')) === 'memorize') { await page.getByTestId('memorized').click(); await page.waitForTimeout(DEBOUNCE) }
     await page.clock.fastForward(90_000)
-    if (await page.getByTestId('submit').isVisible()) {
+    if ((await screen.getAttribute('data-exercise')) === 'mirror' || await page.locator('[data-testid^="product-"]').count()) {
+      await answerByTapping(page)
+    } else if (await page.getByTestId('submit').isVisible()) {
       await page.locator('[data-testid^="answer-"]').first().click(); await page.waitForTimeout(DEBOUNCE)
       await page.getByTestId('submit').click(); await page.waitForTimeout(DEBOUNCE)
       if ((await screen.getAttribute('data-phase')) === 'answer') { await page.locator('[data-testid^="answer-"]:not([disabled])').first().click(); await page.waitForTimeout(DEBOUNCE); await page.getByTestId('submit').click() }
@@ -160,7 +162,7 @@ test('Verlauf zeigt Minuten und Niveaus nach einer Einheit, mit Hinweis „kein 
   await page.getByTestId('tab-verlauf').click()
   await expect(page.getByText('Dies ist kein Test und keine Diagnose.')).toBeVisible()
   await expect(page.getByText('Geübte Minuten pro Woche')).toBeVisible()
-  await expect(page.getByTestId('levels').locator('li')).toHaveCount(9)
+  await expect(page.getByTestId('levels').locator('li')).toHaveCount(11)
   await page.getByRole('button', { name: 'Als Tabelle zeigen' }).click()
   await expect(page.getByRole('table')).toContainText('6 min')
   await page.getByRole('button', { name: 'Diagramm zeigen' }).click()

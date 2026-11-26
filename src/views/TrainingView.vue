@@ -10,6 +10,7 @@ import CompanionBar from '@/components/companion/CompanionBar.vue'
 import { useKeyboard } from '@/composables/useKeyboard'
 import { useIdle } from '@/composables/useIdle'
 import { useWakeLock } from '@/composables/useWakeLock'
+import { focusHeading } from '@/composables/useHeadingFocus'
 import { useProfileStore } from '@/stores/profile'
 import { useSettingsStore } from '@/stores/settings'
 import { useTrainingStore } from '@/stores/training'
@@ -32,6 +33,8 @@ const { idle, reset: resetIdle } = useIdle()
 // Nachfrage nur, wenn gerade trainiert wird – nicht in Pause oder am Ende
 const idleOpen = computed(() => idle.value && (training.stage === 'task' || training.stage === 'break'))
 watch(() => training.stage, () => resetIdle())
+// Screenreader: neue Aufgabe bzw. neuer Abschnitt → Überschrift vorlesen
+watch(() => [training.stage, training.task, training.phase === 'memorize'], () => void focusHeading())
 
 function idleContinue() { resetIdle() }
 function idlePause() { resetIdle(); training.pause() }
@@ -93,9 +96,9 @@ async function done() {
 </template>
 
 <style scoped>
-.training { height: 100%; display: grid; grid-template-rows: minmax(0, 1fr); }
-.training.with-bar { grid-template-rows: minmax(0, 1fr) var(--companion-height); }
-.content { min-height: 0; }
+.training { height: 100%; display: grid; grid-template-rows: minmax(0, 1fr); overflow: hidden !important; }
+.training.with-bar { grid-template-rows: minmax(0, 1fr) auto; }
+.content { min-height: 0; overflow-y: auto; }
 </style>
 
 <style>
@@ -115,5 +118,4 @@ async function done() {
 }
 .idle-title { margin: 0; font-size: var(--text-task); }
 .idle-actions { display: flex; gap: var(--space-3); }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>

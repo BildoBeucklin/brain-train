@@ -86,6 +86,21 @@ export const openAnswers = (page: Page) =>
 /** Beantwortet die aktuelle Aufgabe per Antippen (erste freie Antwort; bei Fehler nochmal). */
 export async function answerByTapping(page: Page, onHint?: () => Promise<void>) {
   const screen = page.locator('.task-screen')
+  // Eigene Bedienung statt Antwortflächen: Spiegelbilder (Bilder antippen) und Einkaufen (Ware + Anzahl)
+  if ((await screen.getAttribute('data-exercise')) === 'mirror') {
+    await page.getByTestId('mirror-0').click(); await page.waitForTimeout(DEBOUNCE)
+    await page.getByTestId('submit').click(); await page.waitForTimeout(DEBOUNCE)
+    return
+  }
+  if (await page.locator('[data-testid^="product-"]').count()) {
+    for (let i = 0; i < 3 && (await screen.getAttribute('data-phase')) === 'answer'; i++) {
+      await page.locator('[data-testid^="product-"]').nth(i).click()
+      await page.locator('[data-testid^="count-"]:not([disabled])').first().click(); await page.waitForTimeout(DEBOUNCE)
+      await page.getByTestId('submit').click(); await page.waitForTimeout(DEBOUNCE)
+      if (i === 0 && (await screen.getAttribute('data-phase')) === 'answer') await onHint?.()
+    }
+    return
+  }
   const multi = await page.getByTestId('submit').isVisible()
   if (multi) {
     await openAnswers(page).nth(0).click(); await page.waitForTimeout(DEBOUNCE)

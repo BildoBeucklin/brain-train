@@ -14,6 +14,7 @@ function block(selector: string): Record<string, string> {
 const themes = {
   hell: block(':root {'),
   dunkel: { ...block(':root {'), ...block(":root[data-theme='dark']") },
+  kontrast: { ...block(':root {'), ...block(":root[data-theme='contrast']") },
 }
 
 const TEXT_PAIRS: [string, string][] = [
@@ -59,5 +60,6 @@ describe('Farben der Farbübung', () => {
     expect(themes.dunkel[c.cssVar.slice(2)]).toBe(c.dark)
     expect(contrast(c.light, themes.hell['color-surface']!)).toBeGreaterThanOrEqual(4.5)
     expect(contrast(c.dark, themes.dunkel['color-surface']!)).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(themes.kontrast[c.cssVar.slice(2)]!, themes.kontrast['color-surface']!)).toBeGreaterThanOrEqual(7)
   })
 })

@@ -20,7 +20,7 @@ const elapsed = computed(() => {
 </script>
 
 <template>
-  <p class="clock" aria-label="Verstrichene Zeit" data-testid="read-clock">{{ elapsed }}</p>
+  <p class="clock" role="timer" aria-live="off" data-testid="read-clock"><span class="sr-only">Verstrichene Zeit: </span>{{ elapsed }}</p>
 </template>
 
 <style scoped>

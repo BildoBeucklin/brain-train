@@ -22,7 +22,9 @@ defineProps<{ task: Task<MemoryData>; phase: string }>()
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(var(--n), minmax(200px, 260px));
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 260px));
+  width: 100%;
+  max-width: calc(var(--n) * 260px + (var(--n) - 1) * var(--space-3));
   gap: var(--space-3);
   justify-content: center;
 }
@@ -31,7 +33,7 @@ defineProps<{ task: Task<MemoryData>; phase: string }>()
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-4) var(--space-3);
+  padding: var(--space-3) var(--space-3);
   border-radius: var(--radius);
   background: var(--color-surface);
   border: 3px solid var(--color-line);

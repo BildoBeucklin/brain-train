@@ -5,6 +5,7 @@ import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { BookOpen, ChartColumn, LogOut, Printer, Settings2, Users } from 'lucide-vue-next'
 import BigButton from '@/components/BigButton.vue'
 import PinPad from '@/components/admin/PinPad.vue'
+import DisplayControls from '@/components/DisplayControls.vue'
 import ProfilesTab from '@/components/admin/ProfilesTab.vue'
 import ContentTab from '@/components/admin/ContentTab.vue'
 import HistoryTab from '@/components/admin/HistoryTab.vue'
@@ -79,6 +80,7 @@ onBeforeUnmount(() => { window.removeEventListener('pointerdown', onActivity); a
             <component :is="t.icon" :size="24" aria-hidden="true" />{{ t.label }}
           </TabsTrigger>
         </TabsList>
+        <DisplayControls />
         <BigButton label="Verwaltung verlassen" :icon="LogOut" data-testid="leave-admin" @press="leave" />
       </header>
       <div class="scroll">
@@ -97,10 +99,10 @@ onBeforeUnmount(() => { window.removeEventListener('pointerdown', onActivity); a
 .gate { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); overflow-y: auto; }
 .tabs { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .head {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap;
   padding: var(--space-2) var(--space-4); border-bottom: 2px solid var(--color-line); background: var(--color-surface);
 }
-.list { display: flex; gap: var(--space-1); }
+.list { display: flex; gap: var(--space-1); flex-wrap: wrap; margin-right: auto; }
 .trigger {
   display: inline-flex; align-items: center; gap: var(--space-1); min-height: 56px; padding: 0 var(--space-2);
   border: 2px solid transparent; border-radius: 12px; background: transparent; color: var(--color-text);

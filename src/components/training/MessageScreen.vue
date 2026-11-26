@@ -4,7 +4,7 @@ defineProps<{ title: string; text?: string }>()
 </script>
 
 <template>
-  <section class="message" aria-live="polite">
+  <section class="message">
     <h1>{{ title }}</h1>
     <p v-if="text">{{ text }}</p>
     <div class="actions"><slot /></div>

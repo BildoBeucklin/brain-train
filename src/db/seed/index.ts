@@ -7,7 +7,7 @@ import wordFinding from './word-finding.json'
 import memory from './memory.json'
 
 /** Bei jeder Änderung an den Seed-Dateien erhöhen. */
-export const SEED_VERSION = 3
+export const SEED_VERSION = 4
 
 type Row = ItemRow & { seedKey: string }
 

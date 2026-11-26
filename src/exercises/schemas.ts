@@ -64,8 +64,8 @@ export const PAYLOAD_SCHEMAS: Partial<Record<ExerciseId, z.ZodType<Record<string
     meaning: z.string().trim().max(160).optional().transform((x) => x || undefined),
     meaningDistractors: list(0, 160).optional(),
   }).superRefine(noDuplicateOf('end', 'distractors')).superRefine((v, ctx) => {
-    if (v.meaning && (v.meaningDistractors?.length ?? 0) < 3) ctx.addIssue({ code: 'custom', path: ['meaningDistractors'], message: 'Zur Bedeutung bitte 3 falsche Bedeutungen angeben' })
-    if (!v.meaning && v.distractors.length < 3) ctx.addIssue({ code: 'custom', path: ['distractors'], message: 'Mindestens 3 falsche Enden' })
+    if (v.meaning && v.meaningDistractors?.length && v.meaningDistractors.length < 3) ctx.addIssue({ code: 'custom', path: ['meaningDistractors'], message: 'Zur Bedeutung bitte 3 falsche Bedeutungen angeben' })
+    if (!v.meaningDistractors?.length && v.distractors.length < 3) ctx.addIssue({ code: 'custom', path: ['distractors'], message: 'Mindestens 3 falsche Enden' })
   }),
   oddOneOut: z.object({ members: list(4, 40), odd: text(40), explanation: text(160) }).superRefine(noDuplicateOf('odd', 'members')),
   opposites: z.object({ word: text(40), opposite: text(40), distractors: list(3, 40) }).superRefine(noDuplicateOf('opposite', 'distractors')),
@@ -93,6 +93,10 @@ export function validateItem(exercise: ExerciseId, payload: unknown, minLevel: n
   // Sprichwörter unter Niveau 8 fragen nach dem Ende → falsche Enden nötig
   if (p.success && exercise === 'proverbs' && minLevel < 8 && ((p.data.distractors as string[]).length < 3)) {
     errors.distractors = 'Unter Niveau 8 werden 3 falsche Enden gebraucht'
+  }
+  // Ab Niveau 8 wird nach der Bedeutung gefragt → Bedeutung und 3 falsche Bedeutungen nötig
+  if (p.success && exercise === 'proverbs' && minLevel >= 8 && (!p.data.meaning || ((p.data.meaningDistractors as string[] | undefined)?.length ?? 0) < 3)) {
+    errors.meaningDistractors = 'Ab Niveau 8 werden Bedeutung und 3 falsche Bedeutungen gebraucht'
   }
   return Object.keys(errors).length || !p.success ? { ok: false, errors } : { ok: true, payload: p.data }
 }

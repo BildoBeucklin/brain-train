@@ -6,6 +6,7 @@ import { band, LEVELS, optionCount } from './levels'
 import { seededRandom } from './random'
 import { EXERCISE_IDS, registry } from './registry'
 import { isCorrect, type Task } from './types'
+import { SILHOUETTES } from './mirror/silhouettes'
 import { colorsConfusable, colorsDistinct, STROOP_COLORS } from './stroop/colors'
 import type { StroopData } from './stroop/generator'
 import type { MirrorData } from './mirror/generator'
@@ -24,7 +25,7 @@ function generate(exercise: ExerciseId, level: Level, seed: number, assisted = f
 function expectedOptions(ex: ExerciseId, level: Level): number {
   if (ex === 'memory') return ({ low: 2, mid: 6, high: 9 } as const)[band(level)]
   if (ex === 'shopping') return ({ low: 18, mid: 45, high: 4 } as const)[band(level)] // Laden: Waren × Anzahl
-  if (ex === 'mirror') return ({ low: 9, mid: 16, high: 25 } as const)[band(level)]
+  if (ex === 'mirror') return ({ low: 9, mid: 16, high: 16 } as const)[band(level)]
   if (ex === 'stroop' || (ex === 'upsideDown' && band(level) === 'high')) return 1 // Farb-Wort-Gitter: nur „Fertig gelesen“
   if (ex === 'oddOneOut') return ({ low: 3, mid: 4, high: 5 } as const)[band(level)]
   return optionCount(level)
@@ -76,13 +77,13 @@ describe('Farben lesen', () => {
     }
   })
 
-  it('Farbanzahl steigt mit dem Niveau', () => {
-    for (const [level, n] of [[1, 2], [5, 4], [10, 7]] as [Level, number][]) {
+  it('Rot, Gelb, Blau; ab Niveau 8 mehr Farben', () => {
+    for (const [level, n] of [[1, 3], [5, 3], [7, 3], [8, 4], [9, 5], [10, 6]] as [Level, number][]) {
       for (let s = 0; s < 10; s++) {
         const t = generate('stroop', level, s) as Task<StroopData>
         const palette = new Set([...t.data.cells.map((c) => c.ink), ...t.data.cells.map((c) => STROOP_COLORS.find((x) => x.name.toLowerCase() === c.word)!.id)])
-        expect(palette.size).toBeLessThanOrEqual(n)
-        expect(palette.size).toBeGreaterThanOrEqual(Math.min(n, 2))
+        expect(palette.size).toBe(n)
+        for (const id of palette) expect(['red', 'yellow', 'blue', 'green', 'purple', 'orange'].slice(0, n)).toContain(id)
       }
     }
   })
@@ -117,6 +118,7 @@ describe('Spiegelbilder', () => {
         expect(right.map((p) => p.icon).sort()).toEqual([...left].sort())
         expect(t.singleTry).toBe(true)
         expect(new Set(left).size).toBe(left.length)
+        for (const icon of left) expect(SILHOUETTES[icon], icon).toContain('<svg')
       }
     }
   })

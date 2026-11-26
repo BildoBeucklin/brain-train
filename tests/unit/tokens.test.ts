@@ -55,11 +55,10 @@ describe.each(Object.entries(themes))('Theme %s', (_, t) => {
 })
 
 describe('Farben der Farbübung', () => {
-  it.each(STROOP_COLORS.map((c) => [c.name, c] as const))('%s: CSS und Code stimmen überein, große Schrift ≥ 4,5:1', (_, c) => {
-    expect(themes.hell[c.cssVar.slice(2)]).toBe(c.light)
-    expect(themes.dunkel[c.cssVar.slice(2)]).toBe(c.dark)
-    expect(contrast(c.light, themes.hell['color-surface']!)).toBeGreaterThanOrEqual(4.5)
-    expect(contrast(c.dark, themes.dunkel['color-surface']!)).toBeGreaterThanOrEqual(4.5)
-    expect(contrast(themes.kontrast[c.cssVar.slice(2)]!, themes.kontrast['color-surface']!)).toBeGreaterThanOrEqual(7)
+  it.each(STROOP_COLORS.map((c) => [c.name, c] as const))('%s: in allen Designs gleich, auf der Tafel große Schrift ≥ 4,5:1', (_, c) => {
+    for (const t of Object.values(themes)) {
+      expect(t[c.cssVar.slice(2)]).toBe(c.hex)
+      expect(contrast(c.hex, t['stroop-board']!)).toBeGreaterThanOrEqual(4.5)
+    }
   })
 })

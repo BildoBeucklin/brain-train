@@ -23,7 +23,8 @@ defineProps<{ task: Task<StroopData>; phase: string }>()
   grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
   gap: var(--space-1) var(--space-4);
   padding: var(--space-2) var(--space-4);
-  background: var(--color-surface);
+  background: var(--stroop-board);
+  border: 3px solid var(--color-line);
   border-radius: var(--radius);
   width: min(100%, calc(var(--cols) * 11rem));
 }

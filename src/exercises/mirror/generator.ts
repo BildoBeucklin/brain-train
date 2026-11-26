@@ -2,39 +2,26 @@ import { band, withinBand } from '../levels'
 import { sample, shuffle } from '../random'
 import type { ExerciseDefinition, Option, Task } from '../types'
 
-/** Nur seitlich bzw. schräg gezeichnete, also deutlich spiegelbare Motive. Mindestens 25 (5×5 ohne Doppelte). */
+/** Seitlich gezeichnete Silhouetten (src/assets/Silhouette), also deutlich spiegelbar. icon = Dateiname ohne .svg. */
 export const MIRROR_PICTURES = [
-  { name: 'Vogel', icon: 'Bird' },
-  { name: 'Fisch', icon: 'Fish' },
-  { name: 'Hase', icon: 'Rabbit' },
-  { name: 'Ratte', icon: 'Rat' },
-  { name: 'Schnecke', icon: 'Snail' },
-  { name: 'Eichhörnchen', icon: 'Squirrel' },
-  { name: 'Schildkröte', icon: 'Turtle' },
-  { name: 'Garnele', icon: 'Shrimp' },
-  { name: 'Wurm', icon: 'Worm' },
-  { name: 'Kranich', icon: 'Origami' },
-  { name: 'Feder', icon: 'Feather' },
-  { name: 'Krankenwagen', icon: 'Ambulance' },
-  { name: 'Bierkrug', icon: 'Beer' },
-  { name: 'Auto', icon: 'Car' },
-  { name: 'Wohnwagen', icon: 'Caravan' },
-  { name: 'Bohrmaschine', icon: 'Drill' },
-  { name: 'Fahne', icon: 'Flag' },
-  { name: 'Taschenlampe', icon: 'Flashlight' },
-  { name: 'Gabelstapler', icon: 'Forklift' },
-  { name: 'Gitarre', icon: 'Guitar' },
-  { name: 'Hammer', icon: 'Hammer' },
-  { name: 'Megafon', icon: 'Megaphone' },
-  { name: 'Mond', icon: 'Moon' },
-  { name: 'Bleistift', icon: 'Pencil' },
-  { name: 'Flugzeug', icon: 'Plane' },
-  { name: 'Rakete', icon: 'Rocket' },
-  { name: 'Segelboot', icon: 'Sailboat' },
-  { name: 'Fernrohr', icon: 'Telescope' },
-  { name: 'Daumen hoch', icon: 'ThumbsUp' },
-  { name: 'Traktor', icon: 'Tractor' },
-  { name: 'Lastwagen', icon: 'Truck' },
+  { name: 'Schlangenhalsvogel', icon: 'anhinga-bird-silhouette-svgrepo-com' },
+  { name: 'Büffel', icon: 'buffalo-side-view-silhouette-svgrepo-com' },
+  { name: 'Schmetterling', icon: 'butterfly-black-side-view-silhouette-svgrepo-com' },
+  { name: 'Auto', icon: 'car-silhouette-svgrepo-com' },
+  { name: 'Küken', icon: 'chick-silhouette-svgrepo-com' },
+  { name: 'Kuh', icon: 'cow-silhouette-svgrepo-com' },
+  { name: 'Elefant', icon: 'elephant-side-view-svgrepo-com' },
+  { name: 'Fisch', icon: 'fish-black-grouper-side-view-svgrepo-com' },
+  { name: 'Pferd', icon: 'horse-standing-black-silhouette-facing-right-svgrepo-com' },
+  { name: 'Pferd mit gedrehtem Kopf', icon: 'horse-standing-black-silhouette-with-head-turned-looking-to-right-side-svgrepo-com' },
+  { name: 'Motorrad', icon: 'motorcycle-black-side-view-silhouette-svgrepo-com' },
+  { name: 'Opossum', icon: 'opossum-mammal-animal-silhouette-svgrepo-com' },
+  { name: 'Hase', icon: 'rabbit-silhouette-svgrepo-com' },
+  { name: 'Wal', icon: 'right-whale-silhouette-svgrepo-com' },
+  { name: 'Saxofon', icon: 'saxophone-side-view-silhouette-svgrepo-com' },
+  { name: 'Truthahn', icon: 'turkey-bird-shape-from-side-view-svgrepo-com' },
+  { name: 'Frauenkopf', icon: 'woman-head-side-silhouette-svgrepo-com' },
+  { name: 'Frau im Kleid', icon: 'woman-silhouette-with-dress-svgrepo-com' },
 ] as const
 
 export interface MirrorData {
@@ -49,7 +36,7 @@ export interface MirrorData {
 const SETUP = {
   low: { cols: 3, odd: [1, 2] },
   mid: { cols: 4, odd: [2, 3] },
-  high: { cols: 5, odd: [3, 4] },
+  high: { cols: 4, odd: [3, 4] }, // 4×4: nur 18 Silhouetten, 5×5 bräuchte 25
 } as const
 
 /**

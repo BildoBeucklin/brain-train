@@ -1,0 +1,125 @@
+name: Apple-Builds (macOS + iOS)
+
+# Läuft auf dem GitHub-Spiegel des Gitea-Repos und baut nur – keine Veröffentlichung.
+# Ergebnis: Artefakte „macos-dmg“ und „ios-ipa“ am jeweiligen Workflow-Lauf (Actions → Lauf → Artifacts).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apple-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: macOS (Universal .dmg)
+    runs-on: macos-latest
+    env:
+      # Optional: Signieren + Notarisieren. Ohne diese Secrets entsteht ein unsigniertes .dmg
+      # (startet nach Rechtsklick → „Öffnen“).
+      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - run: npm ci
+
+      - name: Build
+        run: npx tauri build --target universal-apple-darwin --bundles app,dmg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          if-no-files-found: error
+
+  ios:
+    name: iOS (.ipa)
+    runs-on: macos-latest
+    env:
+      # Optional. Mit allen vier Secrets entsteht ein signiertes .ipa (Ad-hoc, für registrierte Geräte);
+      # ohne sie ein unsigniertes .ipa, das vor der Installation noch signiert werden muss.
+      APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+      IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
+      IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+      IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - run: npm ci
+
+      # Solange src-tauri/gen/apple nicht eingecheckt ist, wird das Xcode-Projekt hier erzeugt.
+      - name: Xcode-Projekt anlegen
+        run: |
+          if [ ! -d src-tauri/gen/apple ]; then
+            npx tauri ios init --ci
+            npx tauri icon src-tauri/icons/icon.png
+          fi
+
+      - name: Build (signiert)
+        if: env.APPLE_DEVELOPMENT_TEAM != '' && env.IOS_CERTIFICATE != '' && env.IOS_MOBILE_PROVISION != ''
+        run: |
+          npx tauri ios build --ci --export-method release-testing
+          mkdir -p out && cp src-tauri/gen/apple/build/arm64/*.ipa out/
+
+      - name: Build (unsigniert)
+        if: env.APPLE_DEVELOPMENT_TEAM == '' || env.IOS_CERTIFICATE == '' || env.IOS_MOBILE_PROVISION == ''
+        run: |
+          cd src-tauri/gen/apple
+          project=$(ls -d *.xcodeproj | head -1)
+          scheme=$(xcodebuild -list -project "$project" | awk '/Schemes:/{f=1;next} f&&NF{print $1}' | grep -i ios | head -1)
+          echo "Projekt: $project, Schema: $scheme"
+          xcodebuild archive \
+            -project "$project" -scheme "$scheme" -configuration release \
+            -sdk iphoneos -destination 'generic/platform=iOS' ARCHS=arm64 \
+            -archivePath "$RUNNER_TEMP/app.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          mkdir -p "$RUNNER_TEMP/Payload" "$GITHUB_WORKSPACE/out"
+          cp -R "$RUNNER_TEMP"/app.xcarchive/Products/Applications/*.app "$RUNNER_TEMP/Payload/"
+          cd "$RUNNER_TEMP" && zip -qry "$GITHUB_WORKSPACE/out/Gedaechtnisstunde-unsigned.ipa" Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: out/*.ipa
+          if-no-files-found: error
+
+# Optionale Secrets (GitHub → Settings → Secrets and variables → Actions):
+#   iOS signiert:   APPLE_TEAM_ID, IOS_CERTIFICATE (base64 .p12), IOS_CERTIFICATE_PASSWORD,
+#                   IOS_MOBILE_PROVISION (base64 .mobileprovision für de.rossmann-it.gedaechtnisstunde)
+#   macOS signiert: APPLE_CERTIFICATE (base64 .p12 „Developer ID Application“), APPLE_CERTIFICATE_PASSWORD,
+#                   APPLE_SIGNING_IDENTITY, APPLE_ID, APPLE_PASSWORD (app-spezifisches Passwort), APPLE_TEAM_ID
